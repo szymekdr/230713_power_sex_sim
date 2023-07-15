@@ -1,0 +1,469 @@
+---
+title: "NTN001- Exploration of sex effects (focus on interactions)"
+author: "B.Phillips"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: "hide"
+    number_section: true
+editor_options: 
+  chunk_output_type: console
+---
+
+NTN001 was designed to establish the NTN renal damage model in both male and female mice in CVRM. 
+
+Aims of this analysis: 
+
+1. Consider presentation of sex * treatment data (best plots)- pipeline for processing this type of data. 
+
+2. Establish sex effects and sex * treatment interactions in the dataset. Classify types of interactions that are observed (table etc).
+
+3. Separately, use values from interactions as a starting point to investigate impact of sex differences in powering experiments. 
+
+Multiple scientific endpoints to collate and investigate- 
+
+1. UACR 
+2. Gene expression panel 
+
+2 controls (PBS and serum control). Serum control is the better control scientifically so we work only with this data. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.height = 7, fig.width = 7)
+
+library(ggplot2)
+library(pander)
+library(emmeans)
+library(here)
+library(tidyverse)
+library(stringi)
+library(car)
+library(broom)
+library(skimr)
+library(janitor)
+library(MASS)
+library(lme4)
+library(plyr)
+library(pracma)
+library(lattice)
+library(multtest)
+library(lmerTest)
+library(effectsize)
+
+## colourblind-friendly colours for ggplot
+cbb_palette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+                 "#0072B2", "#D55E00", "#CC79A7")
+
+## AZ palette for plots with a small number of colours
+color_az <- as.vector(c(
+  Mulberry = rgb(131, 0, 81, max = 255),
+  LimeGreen = rgb(196, 214, 0, max = 255),
+  Navy = rgb(0, 56, 101, max = 255),
+  Graphite = rgb(63, 68, 68, max = 255),
+  LightBlue = rgb(104, 210, 223, max = 255),
+  Magenta = rgb(208, 0, 111, max = 255),
+  Purple = rgb(60, 16, 83, max = 255),
+  Gold = rgb(240, 171, 0, max = 255),
+  Platinum = rgb(157, 176, 172, max = 255)
+))
+
+
+## Avoid table wrapping
+options(width = 1000)
+options(scipen = 999)
+```
+
+# First Section
+
+## Data Preparation
+
+Import: all datasets
+
+```{r data_import}
+df_uacr_long <- read.csv(here::here("data", "UACR_data_long.csv"))
+
+df_gene <- read.csv(here::here("data", "gene_data.csv"))
+
+```
+
+Wrangling:
+
+```{r data_wrangling}
+
+df_gene_long <- df_gene %>%
+  pivot_longer(cols = !gene, names_to = "group") %>%
+  drop_na() %>%
+  separate(group, c("treatment", "sex"), sep = "\\.") %>%
+  filter(!treatment == "PBS")
+
+
+df_gene_long$treatment <- factor(df_gene_long$treatment,
+                                 levels = c("Serum", "NTS", "NTS_enalapril"))
+
+skim(df_gene_long)
+skim(df_uacr_long)
+
+hist(log2(df_gene_long$value))
+
+df_uacr_long$day <- as.factor(df_uacr_long$day)
+df_uacr_long$sex <- as.factor(df_uacr_long$sex)
+df_uacr_long$ID <- as.factor(df_uacr_long$ID)
+df_uacr_long$treatment <- factor(df_uacr_long$treatment,
+                                 levels = c("PBS", "Serum", "NTS",
+                                            "NTS_enalapril"))
+
+df_uacr_long <- df_uacr_long %>%
+  drop_na()
+
+
+names(df_uacr_long)
+
+df_uacr_long %>%
+  group_by(day, sex, treatment) %>%
+  dplyr::summarise(mean = mean(value), n = n(), sd = sd(value)) %>%
+  filter(sex == "Male")
+
+counts <- df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  group_by(treatment, sex, gene) %>%
+  dplyr::summarise(n = n())
+```
+
+## Visualisation
+
+```{r plot_data, fig.height=5, fig.width=7}
+
+df_uacr_long %>%
+  ggplot(aes(x = day, y = value, colour = interaction(treatment, sex)),
+         group = interaction(treatment, sex)) +
+  geom_jitter(width = 0.1) +
+  stat_summary(fun = "mean", geom = "line",
+               aes(group = interaction(treatment, sex))) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.1) +
+  theme_bw() +
+  ylab("UACR") +
+  xlab("Day") +
+  scale_colour_manual(values = cbb_palette)
+
+df_uacr_long %>%
+  filter(day == 4) %>%
+  filter(treatment %in% c("Serum", "NTS")) %>%
+  mutate(Treatment = as.character(case_when(treatment == "Serum" ~ "Control",
+                                          TRUE ~ as.character(treatment)))) %>%
+  ggplot(aes(x = Treatment, y = log2(value), colour = sex, group = sex)) +
+  geom_jitter(width = 0.1) +
+  geom_boxplot(aes(group = interaction(treatment, sex)), alpha = 0) +
+  theme_bw() +
+  ylab("Log UACR") +
+  xlab("Treatment") +
+  scale_colour_manual(values = cbb_palette) +
+  guides(color = guide_legend("Sex"))
+
+df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  mutate(Treatment = as.character(case_when(treatment == "Serum" ~ "Control",
+                                          TRUE ~ as.character(treatment)))) %>%
+  mutate(Sex = dplyr::recode(sex, female = "Female", male = "Male")) %>%
+  ggplot(aes(x = Treatment, y = log2(value), colour = Sex)) +
+  geom_jitter(alpha = 0.5, width = 0.2) +
+  geom_boxplot(alpha = 0) +
+  facet_wrap(~gene, scales = "free", nrow = 2) +
+  theme_bw() +
+  ylab("Relative Log Gene Expression") +
+  xlab("Treatment") +
+  scale_colour_manual(values = cbb_palette) +
+  guides(colour = guide_legend("Sex"))
+
+```
+
+## Statistical Analysis
+
+```{r fit_models to all genes}
+
+# UACR model
+
+df_uacr_long_model <- df_uacr_long %>%
+  filter(!treatment %in% c("PBS", "NTS_enalapril")) %>%
+  filter(day == 4)
+
+mm_uacr <- lmer(log(value) ~ treatment * sex * day + (1 | ID),
+                df_uacr_long_model)
+glm_uacr <- glmer(log(value) ~ treatment * sex * day + (1 | ID),
+                  df_uacr_long_model, family = "poisson")
+plot(glm_uacr)
+qqmath(glm_uacr)
+
+summary(mm_uacr)
+anova(mm_uacr)
+plot(mm_uacr)
+qqmath(mm_uacr)
+
+####
+
+uacr_aov <- aov(log2(value) ~ treatment * sex, df_uacr_long_model)
+plot(uacr_aov)
+
+summary(uacr_aov)
+
+df_uacr_auc <- df_uacr_long %>%
+  mutate(num_day = as.numeric(day)) %>%
+  ddply(c("ID"), .fun = mutate, auc = trapz(value)) %>%
+  group_by(ID, treatment, sex) %>%
+  dplyr::summarise(auc = mean(auc))
+
+df_uacr_auc %>%
+  filter(!treatment %in% c("PBS")) %>%
+  ggplot(aes(x = treatment, y = log(auc), colour = sex)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(width = 0.2) +
+  theme_bw() +
+  scale_colour_manual(values = cbb_palette) +
+  guides(colour = guide_legend("Sex")) +
+  xlab("Treatment") +
+  ylab("AUC- UACR")
+
+mm_uacr_auc <- aov(log(auc) ~ treatment * sex, df_uacr_auc)
+summary(mm_uacr_auc)
+
+
+
+aov_results <- df_gene_long %>%
+  filter(!treatment == "Serum") %>%
+  anova_wrapper(
+    model_expression_as_string = aov_model_expression_as_string,
+    grouping_variable = grouping_variable, type = "III"
+  )
+
+
+aov_results_only_terms_treatment <- aov_results %>%
+  filter(!term %in% c("(Intercept)", "Residuals"))
+
+aov_results_adjusted <- mt.rawp2adjp(aov_results_only_terms_treatment$p.value,
+                                               proc = c("Hochberg"))
+
+bh_adjusted_treatment <- aov_results_only_terms_treatment %>%
+  dplyr::select(-sumsq) %>%
+  bind_cols(aov_results_adjusted$adj[order(aov_results_adjusted$index)[1:24],
+                                     2]) %>%
+  dplyr::rename(Hochberg.Adj = ...6) # %>%
+# filter(Hochberg.Adj <  0.05)
+
+
+sig <- bh_adjusted_treatment %>%
+  # filter(term== "treatment:sex") %>%
+  filter(Hochberg.Adj < 0.05) %>%
+  filter(!term %in% "(Intercept)")
+
+sig %>%
+  dplyr::select(!df) %>%
+  dplyr::rename(f.value = statistic) %>%
+  arrange(term) %>%
+  pander()
+
+col_df <- df_gene_long %>%
+  filter(!treatment == "Serum") %>%
+  filter(gene == "Col1a1")
+
+col_model <- aov(log2(value) ~ treatment * sex, data = col_df)
+summary(col_model)
+
+# Posthocs (Tukey adjusted)
+
+emmeans(col_model, tukey ~ treatment | sex)
+
+
+cd68_df <- df_gene_long %>%
+  filter(!treatment == "Serum") %>%
+  filter(gene == "Cd68")
+
+cd68_model <- aov(log2(value) ~ treatment * sex, data = cd68_df)
+summary(cd68_model)
+
+emmeans(cd68_model, tukey ~ treatment | sex)
+
+```
+
+## Downstream Analysis
+
+```{r downstream_analysis}
+
+# model induction effs only?
+
+# summary stats for eff in dataset
+
+genes_count <- length(unique(df_gene_long$gene))
+
+interact_count <- sig %>%
+  filter(term == "treatment:sex") %>%
+  nrow()
+
+treatment_count <- sig %>%
+  filter(term == "treatment") %>%
+  nrow()
+
+sex_count <- sig %>%
+  filter(term == "sex") %>%
+  nrow()
+
+interact_perc <- interact_count / genes_count * 100
+treatment_perc <- treatment_count / genes_count * 100
+sex_perc <- sex_count / genes_count * 100
+
+effects_df <- data.frame(rbind(treatment_perc, sex_perc, interact_perc))
+effects_df$effect <- c("Treatment", "Sex", "Interaction")
+effects_df$effect <- factor(effects_df$effect,
+                            levels = c("Treatment", "Sex", "Interaction"))
+
+effects_df %>%
+  ggplot(aes(x = effect, y = rbind.treatment_perc..sex_perc..interact_perc.,
+             fill = effect)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  ylab("Percentage of Genes") +
+  xlab("Type of Effect") +
+  scale_fill_manual(values = cbb_palette) +
+  theme(legend.position = "none") +
+  scale_y_continuous(limits = c(0, 100))
+
+# build pipeline for classification- effects overall + classification of
+# interaction effects
+# type of interaction
+```
+
+Interaction effects are less prevalent in the dataset than main effects. 75% of genes exhibit a main effect of treatment, 50% sex, with 25% exhibiting an interaction. 
+
+
+```{r induction effects}
+
+df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  mutate(Sex = dplyr::recode(sex, female = "Female", male = "Male")) %>%
+  ggplot(aes(x = treatment, y = log2(value), colour = Sex)) +
+  geom_jitter(alpha = 0.5, width = 0.2) +
+  geom_boxplot(alpha = 0) +
+  facet_wrap(~gene, scales = "free", nrow = 2) +
+  theme_bw() +
+  ylab("Relative Log Gene Expression") +
+  xlab("Treatment") +
+  scale_colour_manual(values = cbb_palette) +
+  guides(colour = guide_legend("Sex"))
+
+aov_results_induction <- df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  anova_wrapper(
+    model_expression_as_string = aov_model_expression_as_string,
+    grouping_variable = grouping_variable, type = "II"
+  )
+
+
+aov_results_only_terms_induction <- aov_results_induction %>%
+  filter(!term %in% c("(Intercept)", "Residuals"))
+
+# aov_results_only_terms_induction <- aov_results_induction %>%
+#   filter(term == "treatment:sex")
+
+aov_results_adjusted_induction <- mt.rawp2adjp(aov_results_only_terms_induction$p.value,
+                                               proc = c("Hochberg"))
+
+bh_adjusted_results_induction <- aov_results_only_terms_induction %>%
+  dplyr::select(-sumsq) %>%
+  bind_cols(aov_results_adjusted_induction$adj[order(aov_results_adjusted_induction$index)[1:24], 2]) %>%
+  dplyr::rename(Hochberg.Adj = ...6) %>%
+  filter(Hochberg.Adj < 0.05) %>%
+  arrange(gene) %>%
+  dplyr::select(!df) %>%
+  dplyr::rename(f.value = statistic)
+
+pander(bh_adjusted_results_induction)
+
+col1a1_induction <- df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  filter(gene == "Col1a1")
+
+col_model_induction <- aov(log2(value) ~ treatment * sex,
+                           data = col1a1_induction)
+summary(col_model_induction)
+
+plot(col_model_induction)
+
+emmeans(col_model_induction, pairwise ~ treatment)
+
+eta_squared(col_model_induction, generalized = "sex")
+cohens_f(col_model_induction)
+
+lcn2_induction <- df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  filter(gene == "Lcn2")
+
+lcn_model_induction <- aov(log2(value) ~ treatment * sex, data = lcn2_induction)
+
+emmeans(lcn_model_induction, pairwise ~ treatment)
+
+eta_squared(lcn_model_induction, generalized = "sex")
+cohens_f(lcn_model_induction)
+
+summary(lcn_model_induction)
+
+# Only one interaction effect in induction data and same as other interactions.
+```
+
+
+```{r, summary of dataset for induction}
+
+# model induction effs only?
+
+# summary stats for eff in dataset
+
+sig <- bh_adjusted_results_induction %>%
+  # filter(term== "treatment:sex") %>%
+  dplyr::filter(Hochberg.Adj < 0.05) %>%
+  dplyr::filter(!term %in% "(Intercept)")
+
+
+genes_count <- length(unique(df_gene_long$gene))
+
+interact_count <- sig %>%
+  filter(term == "treatment:sex") %>%
+  nrow()
+
+treatment_count <- sig %>%
+  filter(term == "treatment") %>%
+  nrow()
+
+sex_count <- sig %>%
+  filter(term == "sex") %>%
+  nrow()
+
+interact_perc <- interact_count / genes_count * 100
+treatment_perc <- treatment_count / genes_count * 100
+sex_perc <- sex_count / genes_count * 100
+
+effects_df <- data.frame(rbind(treatment_perc, sex_perc, interact_perc))
+effects_df$effect <- c("Treatment", "Sex", "Interaction")
+effects_df$effect <- factor(effects_df$effect, levels = c("Treatment", "Sex",
+                                                          "Interaction"))
+
+effects_df %>%
+  ggplot(aes(x = effect, y = rbind.treatment_perc..sex_perc..interact_perc.,
+             fill = effect)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  ylab("Percentage of Genes") +
+  xlab("Type of Effect") +
+  scale_fill_manual(values = cbb_palette) +
+  theme(legend.position = "none") +
+  scale_y_continuous(limits = c(0, 100))
+
+
+
+df_gene_long %>%
+  filter(!treatment == "NTS_enalapril") %>%
+  group_by(treatment, sex, gene) %>%
+  dplyr::summarise(n = n())
+```
+# Session Info
+
+```{r session_info}
+pander(sessionInfo())
+```
+

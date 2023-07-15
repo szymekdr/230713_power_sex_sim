@@ -1,0 +1,155 @@
+---
+title: "Sex & statistical power - simulations"
+author: "Szymek Drobniak"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    theme: simplex
+    embed-resources: true
+    code-fold: show
+    code-tools: true
+    number-sections: true
+crossref: 
+  fig-title: Figure     # (default is "Figure")
+  tbl-title: Table     # (default is "Table")
+  title-delim: —     # (default is ":")
+  fig-prefix: Fig.   # (default is "Figure")
+  tbl-prefix: Tab.    # (default is "Table")
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(pander)
+library(emmeans)
+library(tidyverse)
+library(here)
+```
+
+
+Analysis preps (colours, options, auxiliary functions)
+
+```{r}
+cbb_palette <- c(
+  "#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+  "#0072B2", "#D55E00", "#CC79A7"
+)
+
+## Avoid table wrapping
+options(width = 800)
+set.seed(999)
+
+source(here("PhillipsKarpEtal_data/funs.r"))
+```
+
+Below results repeat simulations from the paper of *Phillips et al. (2018) PLoS Biol 21(6): e3002129*.
+
+## Scenarios from Fig. 1
+
+*Assuming homoscedasticity of sex variances*
+
+::: {.panel-tabset}
+
+## No sex eff, no ix
+
+```{r}
+no_per_gp <- 5
+variable_mean <- 1
+variable_sd <- 0.5
+treat_es <- 0
+sex_es <- 0
+female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- 0
+sex_sd <- variable_sd * 0
+
+all_effs_sex_none <- rbind(
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_none <- all_effs_sex_none %>%
+    filter(!Effect == "Residuals    ") %>%
+    group_by(Effect, treat_es, male_es, sex_es, method) %>%
+    summarise_all(funs(sum(. < 0.05, na.rm = TRUE) / n())) %>%
+    mutate(sex_eff_size = rep("none"))
+
+calc_power_sex_none %>%
+    ggplot(aes(x = treat_es, y = p_value, colour = Effect)) +
+    geom_hline(yintercept = 0.8, linetype = "dashed") +
+    geom_line(aes(group = Effect)) +
+    theme_classic() +
+    ylab("Power")
+```
+
+## No sex eff, no ix
