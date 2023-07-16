@@ -60,7 +60,7 @@ mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
   )
 
   beta <- c(variable_mean, treat_es2, sex_es2, ix_es2)
-  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd + X[,3] * sex_sd)
+  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * (abs(X[, 3] * (1 + sex_sd) - 1)))
 
 Treatment <- c(rep.int("Control", times = no_per_gp * 2),
            rep.int("Treated", times = no_per_gp * 2))
