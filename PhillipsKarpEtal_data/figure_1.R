@@ -16,7 +16,7 @@ cbb_palette <- c(
 options(width = 800)
 set.seed(999)
 
-source(here::here("funs.r"))
+source(here("./PhillipsKarpEtal_data/funs.r"))
 
 no_per_gp <- 5
 variable_mean <- 1
@@ -24,117 +24,78 @@ variable_sd <- 0.5
 treat_es <- 0
 sex_es <- 0
 female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- 0
+sex_sd <- variable_sd * 0
 
 all_effs_sex_none <- rbind(
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
+    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
     variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
-    male_es = 0, female_es = 0
+    male_es = male_es, female_es = female_es,
+    treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
   )
 )
 
@@ -213,61 +174,6 @@ all_effs_sex_small <- rbind(
     male_es = 0, female_es = 0
   ),
   p_value_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
-    n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
-    variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
-    male_es = 0, female_es = 0
-  ),
-  t_test_interaction_crossed(
     n_rep = 1000, no_per_gp = no_per_gp, variable_mean = 1,
     variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
     male_es = 0, female_es = 0
