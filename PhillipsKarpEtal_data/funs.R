@@ -60,7 +60,7 @@ mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
   )
 
   beta <- c(variable_mean, treat_es2, sex_es2, ix_es2)
-  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * (abs(X[, 3] * (1 + sex_sd) - 1)))
+  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * sqrt(rep(1, 4 * no_per_gp) + X[, 3] * (sex_sd-1)))
 
 Treatment <- c(rep.int("Control", times = no_per_gp * 2),
            rep.int("Treated", times = no_per_gp * 2))
@@ -115,6 +115,10 @@ p_value_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
     mutate(treat_es = rep(treat_es)) %>%
     mutate(sex_es = rep(sex_es)) %>%
     mutate(method = rep("ANOVA")) %>%
+    mutate(heterosc = sex_sd) %>%
+    mutate(treat_es2 = treat_es2) %>%
+    mutate(sex_es2 = sex_es2) %>%
+    mutate(ix_es2 = ix_es2) %>%
     mutate(Effect = dplyr::recode(Effect,
       "Treatment    " = "Treatment",
       "Sex          " = "Sex"
