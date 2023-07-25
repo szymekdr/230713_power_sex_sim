@@ -20,6 +20,8 @@ crossref:
   tbl-prefix: Tab.    # (default is "Table")
 editor_options: 
   chunk_output_type: console
+evaluate:
+  cache: true
 ---
 
 ```{r}
@@ -28,6 +30,7 @@ library(pander)
 library(emmeans)
 library(tidyverse)
 library(here)
+library(ggpubr)
 ```
 
 
@@ -3206,4 +3209,1366 @@ all_sex_effs_sex_only %>%
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
   scale_linetype_discrete(name = "Heteroscedasticity") + ylim(0, 1)
+```
+
+
+# Impact of sample size on power
+
+## Large sex eff, no ix
+
+Below simulation code generates power estimates for the following sample size scenarios: 5M+5F in each treatment group (original scenario, totql sample 20 individuals), 10M+10F (N = 40), 50M+50F (N = 200).
+
+First - low heteroscedasticity:
+
+::: {.panel-tabset}
+
+## 5M+5F
+```{r}
+#| code-fold: true
+
+alpha <- 1
+
+no_per_gp <- 5
+variable_mean <- 1
+variable_sd <- 0.5
+treat_es <- 0
+sex_es <- 1
+female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- 0
+sex_sd <- 1+alpha
+
+all_effs_sex_large_lowh_5 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_lowh_5 <- all_effs_sex_large_lowh_5 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+  mutate(ix_eff_size = rep("none")) %>%
+  mutate(sample_size = rep("5M+5F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_large_lowh_5 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+
+```
+
+## 10M+10F
+```{r}
+#| code-fold: true
+
+
+no_per_gp <- 10
+
+all_effs_sex_large_lowh_10 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_lowh_10 <- all_effs_sex_large_lowh_10 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("none")) %>%
+    mutate(sample_size = rep("10M+10F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_large_lowh_10 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 50M+50F
+```{r}
+#| code-fold: true
+
+
+no_per_gp <- 50
+
+all_effs_sex_large_lowh_50 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_lowh_50 <- all_effs_sex_large_lowh_50 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("none")) %>%
+    mutate(sample_size = rep("50M+50F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_large_lowh_50 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+:::
+
+Large heteroscedasticity:
+
+::: {.panel-tabset}
+## 5M+5F
+```{r}
+#| code-fold: true
+
+alpha <- 2
+
+no_per_gp <- 5
+variable_mean <- 1
+variable_sd <- 0.5
+treat_es <- 0
+sex_es <- 1
+female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- 0
+sex_sd <- 1+alpha
+
+all_effs_sex_large_largeh_5 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_largeh_5 <- all_effs_sex_large_largeh_5 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("none")) %>%
+    mutate(sample_size = rep("5M+5F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_large_largeh_5 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 10M+10F
+```{r}
+#| code-fold: true
+
+
+no_per_gp <- 10
+
+all_effs_sex_large_largeh_10 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_largeh_10 <- all_effs_sex_large_largeh_10 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("none")) %>%
+    mutate(sample_size = rep("10M+10F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_large_largeh_10 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 50M+50F
+```{r}
+#| code-fold: true
+
+
+no_per_gp <- 50
+
+all_effs_sex_large_largeh_50 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_large_largeh_50 <- all_effs_sex_large_largeh_50 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("none")) %>%
+    mutate(sample_size = rep("50M+50F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_large_largeh_50 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+:::
+
+## Large sex effect, crossed reaction norms (interaction)
+
+Identical sample size scenarios.
+
+First - low heteroscedasticity:
+
+::: {.panel-tabset}
+## 5M+5F
+```{r}
+#| code-fold: true
+
+alpha <- 1
+
+no_per_gp <- 5
+variable_mean <- 1
+variable_sd <- 0.5
+treat_es <- 0
+sex_es <- -2
+female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- -2
+sex_sd <- 1+alpha
+
+all_effs_sex_ix_large_lowh_5 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_lowh_5 <- all_effs_sex_ix_large_lowh_5 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("5M+5F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_ix_large_lowh_5 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 10M+10F
+```{r}
+
+no_per_gp <- 10
+
+all_effs_sex_ix_large_lowh_10 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_lowh_10 <- all_effs_sex_ix_large_lowh_10 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("10M+10F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_ix_large_lowh_10 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 50M+50F
+```{r}
+
+
+no_per_gp <- 50
+
+all_effs_sex_ix_large_lowh_50 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_lowh_50 <- all_effs_sex_ix_large_lowh_50 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("50M+50F")) %>%
+    mutate(heterosc = rep("low"))
+
+calc_power_sex_ix_large_lowh_50 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+:::
+
+
+Large heteroscedasticity:
+
+::: {.panel-tabset}
+## 5M+5F
+```{r}
+#| code-fold: true
+
+alpha <- 2
+
+no_per_gp <- 5
+variable_mean <- 1
+variable_sd <- 0.5
+treat_es <- 0
+sex_es <- -2
+female_es <- 0
+male_es <- 0
+treat_es2 <- treat_es
+sex_es2 <- sex_es
+ix_es2 <- -2
+sex_sd <- 1+alpha
+
+all_effs_sex_ix_large_largeh_5 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_largeh_5 <- all_effs_sex_ix_large_largeh_5 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("5M+5F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_ix_large_largeh_5 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 10M+10F
+```{r}
+
+no_per_gp <- 10
+
+all_effs_sex_ix_large_largeh_10 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_largeh_10 <- all_effs_sex_ix_large_largeh_10 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("10M+10F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_ix_large_largeh_10 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+
+## 50M+50F
+```{r}
+
+no_per_gp <- 50
+
+all_effs_sex_ix_large_largeh_50 <- rbind(
+  p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.2, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.2, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.3, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.3, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.4, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.4, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.5, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.5, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.6, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.6, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.7, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.7, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.8, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.8, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 0.9, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 0.9, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    ),
+    p_value_interaction_crossed(
+        n_rep = 1000, no_per_gp = no_per_gp, variable_mean = variable_mean,
+        variable_sd = variable_sd, treat_es = 1, sex_es = sex_es,
+        male_es = male_es, female_es = female_es,
+        treat_es2 = 1, sex_es2 = sex_es2, ix_es2 = ix_es2, sex_sd = sex_sd
+    )
+)
+
+calc_power_sex_ix_large_largeh_50 <- all_effs_sex_ix_large_largeh_50 %>%
+  filter(!Effect == "Residuals    ") %>%
+  group_by(Effect, treat_es2, sex_es2, method, heterosc) %>%
+  summarise_all(.funs = list(~ sum(. < 0.05, na.rm = TRUE) / n())) %>%
+  mutate(sex_eff_size = rep("large")) %>%
+    mutate(ix_eff_size = rep("large")) %>%
+    mutate(sample_size = rep("50M+50F")) %>%
+    mutate(heterosc = rep("large"))
+
+calc_power_sex_ix_large_largeh_50 %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(group = Effect)) +
+  theme_classic() +
+  ylab("Power") + ylim(0, 1)
+```
+:::
+
+
+## Summaries for sample size scenarios
+
+No interaction, low (left) and large (right) heteroscedasticity:
+
+```{r}
+#| code-fold: true
+
+
+all_sex_effs_sex_only <- rbind(
+    calc_power_sex_large_lowh_5,
+    calc_power_sex_large_lowh_10,
+    calc_power_sex_large_lowh_50,
+    calc_power_sex_large_largeh_5,
+    calc_power_sex_large_largeh_10,
+    calc_power_sex_large_largeh_50
+)
+
+all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
+
+# plot1 <- all_sex_effs_sex_only %>%
+#   filter(Effect %in% c("Treatment")) %>%
+#   filter(heterosc %in% c("low")) %>%
+#   mutate(sample_size = factor(sample_size,
+#                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(method = recode(method,
+#                          "ANOVA" = "Factorial")) %>%
+#   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
+#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_line() +
+#   theme_classic() +
+#   ylab("Statistical power") +
+#   xlab("Main treatment effect") +
+#   scale_colour_manual(name = "Sample size", values = cbb_palette) +
+#   # scale_linetype_discrete(name = "Heteroscedasticity")  +
+#   ylim(0, 1)
+
+
+# plot2 <- all_sex_effs_sex_only %>%
+#   filter(Effect %in% c("Treatment")) %>%
+#   filter(heterosc %in% c("large")) %>%
+#   mutate(sample_size = factor(sample_size,
+#                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(method = recode(method,
+#                          "ANOVA" = "Factorial")) %>%
+#   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
+#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_line() +
+#   theme_classic() +
+#   ylab("Statistical power") +
+#   xlab("Main treatment effect") +
+#   scale_colour_manual(name = "Sample size", values = cbb_palette) +
+#   # scale_linetype_discrete(name = "Heteroscedasticity")  +
+#   ylim(0, 1)
+
+# ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "right")
+
+plot1 <- all_sex_effs_sex_only %>%
+  filter(heterosc %in% c("low")) %>%
+  mutate(sample_size = factor(sample_size,
+                               levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(sex_eff_size = factor(sex_eff_size,
+#                                levels = c("none", "small", "large"))) %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(linetype = sample_size)) +
+  theme_classic() +
+  ylab("Statistical power") +
+  xlab("Main treatment effect") +
+  scale_colour_manual(name = "Effect", values = cbb_palette) +
+  scale_linetype_discrete(name = "Sample size") + ylim(0, 1)
+
+
+plot2 <- all_sex_effs_sex_only %>%
+  filter(heterosc %in% c("large")) %>%
+  mutate(sample_size = factor(sample_size,
+                               levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(sex_eff_size = factor(sex_eff_size,
+#                                levels = c("none", "small", "large"))) %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(linetype = sample_size)) +
+  theme_classic() +
+  ylab("Statistical power") +
+  xlab("Main treatment effect") +
+  scale_colour_manual(name = "Effect", values = cbb_palette) +
+  scale_linetype_discrete(name = "Sample size") + ylim(0, 1)
+
+ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "right")
+```
+
+Interaction of effect direction present, low (left) and high (right) heteroscedasticity:
+
+```{r}
+#| code-fold: true
+
+
+all_sex_effs_sex_only <- rbind(
+    calc_power_sex_ix_large_lowh_5,
+    calc_power_sex_ix_large_lowh_10,
+    calc_power_sex_ix_large_lowh_50,
+    calc_power_sex_ix_large_largeh_5,
+    calc_power_sex_ix_large_largeh_10,
+    calc_power_sex_ix_large_largeh_50
+)
+
+all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
+
+# plot1 <- all_sex_effs_sex_only %>%
+#   filter(Effect %in% c("Treatment")) %>%
+#   filter(heterosc %in% c("low")) %>%
+#   mutate(sample_size = factor(sample_size,
+#                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(method = recode(method,
+#                          "ANOVA" = "Factorial")) %>%
+#   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
+#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_line() +
+#   theme_classic() +
+#   ylab("Statistical power") +
+#   xlab("Main treatment effect") +
+#   scale_colour_manual(name = "Sample size", values = cbb_palette) +
+#   # scale_linetype_discrete(name = "Heteroscedasticity")  +
+#   ylim(0, 1)
+
+
+# plot2 <- all_sex_effs_sex_only %>%
+#   filter(Effect %in% c("Treatment")) %>%
+#   filter(heterosc %in% c("large")) %>%
+#   mutate(sample_size = factor(sample_size,
+#                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(method = recode(method,
+#                          "ANOVA" = "Factorial")) %>%
+#   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
+#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_line() +
+#   theme_classic() +
+#   ylab("Statistical power") +
+#   xlab("Main treatment effect") +
+#   scale_colour_manual(name = "Sample size", values = cbb_palette) +
+#   # scale_linetype_discrete(name = "Heteroscedasticity")  +
+#   ylim(0, 1)
+
+# ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "right")
+
+plot1 <- all_sex_effs_sex_only %>%
+  filter(heterosc %in% c("low")) %>%
+  mutate(sample_size = factor(sample_size,
+                               levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(sex_eff_size = factor(sex_eff_size,
+#                                levels = c("none", "small", "large"))) %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(linetype = sample_size)) +
+  theme_classic() +
+  ylab("Statistical power") +
+  xlab("Main treatment effect") +
+  scale_colour_manual(name = "Effect", values = cbb_palette) +
+  scale_linetype_discrete(name = "Sample size") + ylim(0, 1)
+
+
+plot2 <- all_sex_effs_sex_only %>%
+  filter(heterosc %in% c("large")) %>%
+  mutate(sample_size = factor(sample_size,
+                               levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
+#   mutate(sex_eff_size = factor(sex_eff_size,
+#                                levels = c("none", "small", "large"))) %>%
+  ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
+  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_line(aes(linetype = sample_size)) +
+  theme_classic() +
+  ylab("Statistical power") +
+  xlab("Main treatment effect") +
+  scale_colour_manual(name = "Effect", values = cbb_palette) +
+  scale_linetype_discrete(name = "Sample size") + ylim(0, 1)
+
+ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "right")
 ```
