@@ -34,7 +34,9 @@ library(ggpubr)
 ```
 
 
+
 Analysis preps (colours, options, auxiliary functions)
+
 
 ```{r}
 cbb_palette <- c(
@@ -48,6 +50,7 @@ set.seed(999)
 
 source(here("PhillipsKarpEtal_data/funs.r"))
 ```
+
 
 Below results repeat simulations from the paper of *Phillips et al. (2018) PLoS Biol 21(6): e3002129*. Original results simplified by removing the post-hoc and the (pooled) t-test methods of analysing data. Generation of simulated data was modified to use a formal linear model defined as:
 
@@ -64,6 +67,7 @@ with $\mathbf{b}=(\mu,\beta_{Treat},\beta_{Sex},\beta_{Treat:Sex})$ and $\mathbf
 ::: {.panel-tabset}
 
 ## No sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -164,7 +168,9 @@ calc_power_sex_none %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -268,7 +274,9 @@ calc_power_sex_small %>%
 ```
 
 
+
 ## Large sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -371,9 +379,11 @@ calc_power_sex_large %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 Plots combining all scenarios from Fig. 1
+
 
 ```{r}
 #| code-fold: true
@@ -414,18 +424,22 @@ all_sex_effs_sex_only %>%
 ```
 
 
+
 ## Heteroscedastic sex variances
 
 We assume several scenarios with $\alpha$ equal to 0 (the above scenarios), 1 and 2, which relates to 100% or 200% increase in male variance, in relation to female variance (or ~44% and ~73% increase in male SD). The direction of sex bias is arbitrary.
 
 **Low heteroscedasticity**
 
+
 ```{r}
 alpha <- 1
 ```
 
+
 ::: {.panel-tabset}
 ## No sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -526,7 +540,9 @@ calc_power_sex_none_lowh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -630,7 +646,9 @@ calc_power_sex_small_lowh %>%
 ```
 
 
+
 ## Large sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -732,17 +750,21 @@ calc_power_sex_large_lowh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 
 **Large heteroscedasticity**
 
+
 ```{r}
 alpha <- 2
 ```
 
+
 ::: {.panel-tabset}
 ## No sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -843,7 +865,9 @@ calc_power_sex_none_largeh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -947,7 +971,9 @@ calc_power_sex_small_largeh %>%
 ```
 
 
+
 ## Large sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1049,9 +1075,11 @@ calc_power_sex_large_largeh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 It should be of note that evolutionary biology has seen heteroscedasticities exceeding 100% in variance ration between sexes. Combined results below show the impact of heteroscedasticity.
+
 
 ```{r}
 #| code-fold: true
@@ -1102,6 +1130,7 @@ plotA
 ```
 
 
+
 # Scenarios from Fig. 4 - interaction of magnitude
 
 ## From original paper
@@ -1113,6 +1142,7 @@ Below simulations were only slightly modified. We assumed a moderate (+0.5) over
 ::: {.panel-tabset}
 
 ## No sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1214,7 +1244,9 @@ calc_power_sex_ix_none %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1319,7 +1351,9 @@ calc_power_sex_ix_small %>%
 ```
 
 
+
 ## Large sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1423,9 +1457,11 @@ calc_power_sex_ix_large %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 Plots combining all scenarios from Fig. 1
+
 
 ```{r}
 #| code-fold: true
@@ -1466,18 +1502,22 @@ all_sex_effs_sex_only %>%
 ```
 
 
+
 ## Heteroscedastic sex variances
 
 We assume several scenarios with $\alpha$ equal to 0 (the above scenarios), 1 and 2, which relates to 100% or 200% increase in male variance, in relation to female variance (or ~44% and ~73% increase in male SD). The direction of sex bias is arbitrary.
 
 **Low heteroscedasticity**
 
+
 ```{r}
 alpha <- 1
 ```
 
+
 ::: {.panel-tabset}
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1579,7 +1619,9 @@ calc_power_sex_ix_none_lowh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, small ix
+
 
 ```{r}
 #| code-fold: true
@@ -1684,7 +1726,9 @@ calc_power_sex_ix_small_lowh %>%
 ```
 
 
+
 ## Small sex eff, large ix
+
 
 ```{r}
 #| code-fold: true
@@ -1787,17 +1831,21 @@ calc_power_sex_ix_large_lowh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 
 **Large heteroscedasticity**
 
+
 ```{r}
 alpha <- 2
 ```
 
+
 ::: {.panel-tabset}
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -1899,7 +1947,9 @@ calc_power_sex_ix_none_largeh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, small ix
+
 
 ```{r}
 #| code-fold: true
@@ -2004,7 +2054,9 @@ calc_power_sex_ix_small_largeh %>%
 ```
 
 
+
 ## Small sex eff, large ix
+
 
 ```{r}
 #| code-fold: true
@@ -2107,9 +2159,11 @@ calc_power_sex_ix_large_largeh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 Power consequences of heteroscedasticities with varying (magnitude-only) interaction.
+
 
 ```{r}
 #| code-fold: true
@@ -2160,6 +2214,7 @@ plotB
 ```
 
 
+
 # Scenarios from Fig. 5 - interaction of direction
 
 ## From original paper
@@ -2171,6 +2226,7 @@ Below simulations were only slightly modified. We assumed a strong (-1) overall 
 ::: {.panel-tabset}
 
 ## No sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -2272,7 +2328,9 @@ calc_power_sex_ix_none %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -2377,7 +2435,9 @@ calc_power_sex_ix_small %>%
 ```
 
 
+
 ## Large sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -2481,9 +2541,11 @@ calc_power_sex_ix_large %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 Plots combining all scenarios from Fig. 1
+
 
 ```{r}
 #| code-fold: true
@@ -2524,18 +2586,22 @@ all_sex_effs_sex_only %>%
 ```
 
 
+
 ## Heteroscedastic sex variances
 
 We assume several scenarios with $\alpha$ equal to 0 (the above scenarios), 1 and 2, which relates to 100% or 200% increase in male variance, in relation to female variance (or ~44% and ~73% increase in male SD). The direction of sex bias is arbitrary.
 
 **Low heteroscedasticity**
 
+
 ```{r}
 alpha <- 1
 ```
 
+
 ::: {.panel-tabset}
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -2637,7 +2703,9 @@ calc_power_sex_ix_none_lowh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, small ix
+
 
 ```{r}
 #| code-fold: true
@@ -2742,7 +2810,9 @@ calc_power_sex_ix_small_lowh %>%
 ```
 
 
+
 ## Small sex eff, large ix
+
 
 ```{r}
 #| code-fold: true
@@ -2845,17 +2915,21 @@ calc_power_sex_ix_large_lowh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 
 **Large heteroscedasticity**
 
+
 ```{r}
 alpha <- 2
 ```
 
+
 ::: {.panel-tabset}
 ## Small sex eff, no ix
+
 
 ```{r}
 #| code-fold: true
@@ -2957,7 +3031,9 @@ calc_power_sex_ix_none_largeh %>%
     ylab("Power") + ylim(0, 1)
 ```
 
+
 ## Small sex eff, small ix
+
 
 ```{r}
 #| code-fold: true
@@ -3062,7 +3138,9 @@ calc_power_sex_ix_small_largeh %>%
 ```
 
 
+
 ## Small sex eff, large ix
+
 
 ```{r}
 #| code-fold: true
@@ -3165,9 +3243,11 @@ calc_power_sex_ix_large_largeh %>%
   ylab("Power") + ylim(0, 1)
 
 ```
+
 :::
 
 Power consequences of heteroscedasticities with varying (direction-only) interaction. Power anomalies indicate pretty low inferential abilities of such models at low sample sizes.
+
 
 ```{r}
 #| code-fold: true
@@ -3216,6 +3296,7 @@ all_sex_effs_sex_only %>%
 ```
 
 
+
 # Impact of sample size on power
 
 ## Large sex eff, no ix
@@ -3227,6 +3308,7 @@ First - low heteroscedasticity:
 ::: {.panel-tabset}
 
 ## 5M+5F
+
 ```{r}
 #| code-fold: true
 
@@ -3331,7 +3413,9 @@ calc_power_sex_large_lowh_5 %>%
 
 ```
 
+
 ## 10M+10F
+
 ```{r}
 #| code-fold: true
 
@@ -3424,7 +3508,9 @@ calc_power_sex_large_lowh_10 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 50M+50F
+
 ```{r}
 #| code-fold: true
 
@@ -3516,12 +3602,14 @@ calc_power_sex_large_lowh_50 %>%
   theme_classic() +
   ylab("Power") + ylim(0, 1)
 ```
+
 :::
 
 Large heteroscedasticity:
 
 ::: {.panel-tabset}
 ## 5M+5F
+
 ```{r}
 #| code-fold: true
 
@@ -3625,7 +3713,9 @@ calc_power_sex_large_largeh_5 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 10M+10F
+
 ```{r}
 #| code-fold: true
 
@@ -3718,7 +3808,9 @@ calc_power_sex_large_largeh_10 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 50M+50F
+
 ```{r}
 #| code-fold: true
 
@@ -3810,6 +3902,7 @@ calc_power_sex_large_largeh_50 %>%
   theme_classic() +
   ylab("Power") + ylim(0, 1)
 ```
+
 :::
 
 ## Large sex effect, crossed reaction norms (interaction)
@@ -3820,6 +3913,7 @@ First - low heteroscedasticity:
 
 ::: {.panel-tabset}
 ## 5M+5F
+
 ```{r}
 #| code-fold: true
 
@@ -3923,7 +4017,9 @@ calc_power_sex_ix_large_lowh_5 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 10M+10F
+
 ```{r}
 
 no_per_gp <- 10
@@ -4014,7 +4110,9 @@ calc_power_sex_ix_large_lowh_10 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 50M+50F
+
 ```{r}
 
 
@@ -4105,6 +4203,7 @@ calc_power_sex_ix_large_lowh_50 %>%
   theme_classic() +
   ylab("Power") + ylim(0, 1)
 ```
+
 :::
 
 
@@ -4112,6 +4211,7 @@ Large heteroscedasticity:
 
 ::: {.panel-tabset}
 ## 5M+5F
+
 ```{r}
 #| code-fold: true
 
@@ -4215,7 +4315,9 @@ calc_power_sex_ix_large_largeh_5 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 10M+10F
+
 ```{r}
 
 no_per_gp <- 10
@@ -4306,7 +4408,9 @@ calc_power_sex_ix_large_largeh_10 %>%
   ylab("Power") + ylim(0, 1)
 ```
 
+
 ## 50M+50F
+
 ```{r}
 
 no_per_gp <- 50
@@ -4396,12 +4500,14 @@ calc_power_sex_ix_large_largeh_50 %>%
   theme_classic() +
   ylab("Power") + ylim(0, 1)
 ```
+
 :::
 
 
 ## Summaries for sample size scenarios
 
 No interaction, low (left) and large (right) heteroscedasticity:
+
 
 ```{r}
 #| code-fold: true
@@ -4489,7 +4595,9 @@ plot2 <- all_sex_effs_sex_only %>%
 ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "right")
 ```
 
+
 Interaction of effect direction present, low (left) and high (right) heteroscedasticity:
+
 
 ```{r}
 #| code-fold: true
@@ -4579,9 +4687,11 @@ ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "righ
 
 
 
+
 ## Simulating sample size
 
 Scenario 1: strong sex effect, none to large heteroscedasticity. Assumed power 80% for treatment effect.
+
 
 ```{r}
 #| code-fold: true
@@ -4768,7 +4878,6 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
     mutate(heterosc = rep("low"))
 
 ```
-
 
 ```{r}
 #| code-fold: true
@@ -4948,9 +5057,6 @@ plot1.1 <- all_sex_effs_sex_only %>%
 plot1.1
 ```
 
-
-
-
 ```{r}
 #| code-fold: true
 
@@ -5044,8 +5150,6 @@ calc_power_sex_large_noh <- all_effs_sex_large_noh %>%
 
 ```
 
-
-
 ```{r}
 #| code-fold: true
 
@@ -5138,7 +5242,6 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
     mutate(heterosc = rep("low"))
 
 ```
-
 
 ```{r}
 #| code-fold: true
@@ -5318,9 +5421,6 @@ plot2.1
 
 ```
 
-
-
-
 ```{r}
 #| code-fold: true
 
@@ -5414,8 +5514,6 @@ calc_power_sex_large_noh <- all_effs_sex_large_noh %>%
 
 ```
 
-
-
 ```{r}
 #| code-fold: true
 
@@ -5508,7 +5606,6 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
     mutate(heterosc = rep("low"))
 
 ```
-
 
 ```{r}
 #| code-fold: true
@@ -5688,9 +5785,9 @@ plot3.1
 
 ```
 
-(In all below examples the y axis (sample size) indicates the number of individuals per group and sex - hence the total sample size is 4 times the number indicated on the y axis.)
 
 Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for full range of effect sizes and on log-scale for sample size:
+
 
 ```{r}
 comb1 <- ggarrange(plot1, plot2, plot3, ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom", labels = c("A", "B", "C"))
@@ -5699,7 +5796,9 @@ comb1
 ```
 
 
+
 Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for moderate-sized effect sizes using identity scale for sample size:
+
 
 ```{r}
 comb2 <- ggarrange(plot1.1, plot2.1, plot3.1, ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom", labels = c("A", "B", "C"))
@@ -5708,7 +5807,9 @@ comb2
 ```
 
 
+
 Combined plots demonstrating the impact of heteroscedasticity on power for a no-interaction case (A) and interaction-of-magnitude case (B; stronger effect in the more variable sex):
+
 
 ```{r}
 comb3 <- ggarrange(plotA, plotB, ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", labels = c("A", "B"))

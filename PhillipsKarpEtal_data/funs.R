@@ -60,17 +60,19 @@ mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
   )
 
   beta <- c(variable_mean, treat_es2, sex_es2, ix_es2)
-  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * sqrt(rep(1, 4 * no_per_gp) + X[, 3] * (sex_sd-1)))
+  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * sqrt(rep(1, 4 * no_per_gp) + X[, 3] * (sex_sd - 1)))
 
-Treatment <- c(rep.int("Control", times = no_per_gp * 2),
-           rep.int("Treated", times = no_per_gp * 2))
+  Treatment <- c(
+    rep.int("Control", times = no_per_gp * 2),
+    rep.int("Treated", times = no_per_gp * 2)
+  )
   Sex <- c(
     rep.int("Female", times = no_per_gp),
     rep.int("Male", times = no_per_gp),
     rep.int("Female", times = no_per_gp),
     rep.int("Male", times = no_per_gp)
   )
-  
+
   sim_df <- data.frame(col1 = y, col2 = Sex, col3 = Treatment)
   names(sim_df) <- c("dep_variable", "Sex", "Treatment")
   return(sim_df)
@@ -93,37 +95,74 @@ p_value_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
                                         variable_sd, treat_es, sex_es, male_es,
                                         female_es,
                                         treat_es2, sex_es2, ix_es2,
-                              sex_sd = 1) {
-  p_values <- function() {
-    sim_data <- mock_df_generator(no_per_gp, variable_mean, variable_sd,
-                              treat_es, sex_es, male_es, female_es,
-                              treat_es2, sex_es2, ix_es2,
-                              sex_sd)
+                                        sex_sd = 1,
+                                        fix_power = F,
+                                        assume_power = 0.8,
+                                        tweak_param = "no_per_gp", tweak_effect = "Treatment") {
+  
 
-    model <- aov(dep_variable ~ Treatment * Sex, sim_data)
 
-    return(summary(model))
+  real_power <- 0
+
+  while (real_power < assume_power) {
+    p_values <- function() {
+      sim_data <- mock_df_generator(
+        no_per_gp, variable_mean, variable_sd,
+        treat_es, sex_es, male_es, female_es,
+        treat_es2, sex_es2, ix_es2,
+        sex_sd
+      )
+
+      model <- aov(dep_variable ~ Treatment * Sex, sim_data)
+
+      return(summary(model))
+    }
+
+    sim_p_val <- as.data.frame(replicate(n_rep, p_values()))
+
+    full_results <- sim_p_val %>%
+      select(starts_with("Pr..")) %>%
+      as_tibble(rownames = "Effect") %>%
+      pivot_longer(-Effect, values_to = "p_value") %>%
+      mutate(male_es = rep(male_es)) %>%
+      mutate(treat_es = rep(treat_es)) %>%
+      mutate(sex_es = rep(sex_es)) %>%
+      mutate(method = rep("ANOVA")) %>%
+      mutate(heterosc = sex_sd) %>%
+      mutate(treat_es2 = treat_es2) %>%
+      mutate(sex_es2 = sex_es2) %>%
+      mutate(ix_es2 = ix_es2) %>%
+      mutate(Effect = dplyr::recode(Effect,
+        "Treatment    " = "Treatment",
+        "Sex          " = "Sex"
+      )) %>%
+      select(-name)
+
+    temp_results <- full_results %>%
+      filter(!Effect == "Residuals    ") %>%
+      filter(Effect == tweak_effect)
+
+    if (fix_power) {
+      real_power <- sum(temp_results$p_value < 0.05) / nrow(temp_results)
+      no_per_gp <- ceiling(no_per_gp * 1.25)
+    } else {
+      real_power <- 1
+    }
+    
+    cat("Power:", real_power, "Sample size:", no_per_gp, "\n")
+
+    if(no_per_gp > 10000) {
+      break
+    }
   }
-
-  sim_p_val <- as.data.frame(replicate(n_rep, p_values()))
-
-  full_results <- sim_p_val %>%
-    select(starts_with("Pr..")) %>%
-    as_tibble(rownames = "Effect") %>%
-    pivot_longer(-Effect, values_to = "p_value") %>%
-    mutate(male_es = rep(male_es)) %>%
-    mutate(treat_es = rep(treat_es)) %>%
-    mutate(sex_es = rep(sex_es)) %>%
-    mutate(method = rep("ANOVA")) %>%
-    mutate(heterosc = sex_sd) %>%
-    mutate(treat_es2 = treat_es2) %>%
-    mutate(sex_es2 = sex_es2) %>%
-    mutate(ix_es2 = ix_es2) %>%
-    mutate(Effect = dplyr::recode(Effect,
-      "Treatment    " = "Treatment",
-      "Sex          " = "Sex"
-    )) %>%
-    select(-name)
+  
+  full_results <- full_results %>%
+    mutate(power = real_power) %>%
+    mutate(tweak_param = tweak_param) %>%
+    mutate(tweak_effect = tweak_effect) %>%
+    mutate(ssize = no_per_gp)
+  
+  return(full_results)
 }
 
 ######################
@@ -132,8 +171,10 @@ t_test_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
                                        variable_sd, treat_es, sex_es, male_es,
                                        female_es) {
   p_values <- function() {
-    sim_data <- mock_df_generator(no_per_gp, variable_mean, variable_sd,
-                                  treat_es, sex_es, male_es, female_es)
+    sim_data <- mock_df_generator(
+      no_per_gp, variable_mean, variable_sd,
+      treat_es, sex_es, male_es, female_es
+    )
 
     model <- t.test(dep_variable ~ Treatment, sim_data, var.equal = TRUE)
 
@@ -157,8 +198,10 @@ t_test_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
 p_value_posthoc_values <- function(n_rep, no_per_gp, variable_mean, variable_sd,
                                    treat_es, sex_es, male_es, female_es) {
   posthoc_p_values <- function() {
-    sim_data <- mock_df_generator(no_per_gp, variable_mean, variable_sd,
-                                  treat_es, sex_es, male_es, female_es)
+    sim_data <- mock_df_generator(
+      no_per_gp, variable_mean, variable_sd,
+      treat_es, sex_es, male_es, female_es
+    )
 
     model <- aov(dep_variable ~ Treatment * Sex, sim_data)
 
@@ -199,7 +242,7 @@ anova_wrapper <- function(data, model_expression_as_string,
   data %>%
     group_by_(grouping_variable) %>%
     do(f_wrap(.) %>%
-         Anova(... = ...) %>%
-         tidy()) %>%
+      Anova(... = ...) %>%
+      tidy()) %>%
     return()
 }
