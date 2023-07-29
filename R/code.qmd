@@ -4579,7 +4579,9 @@ ggarrange(plot1, plot2, ncol = 2, nrow = 1, common.legend = TRUE, legend = "righ
 
 
 
-## Simulating sample size
+# Simulating sample size
+
+## Simulations assuming target power = 80%
 
 Scenario 1: strong sex effect, none to large heteroscedasticity. Assumed power 80% for treatment effect.
 
@@ -4943,7 +4945,7 @@ plot1.1 <- all_sex_effs_sex_only %>%
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
-  theme(text = element_text(size=16)) + xlim(0.3, 0.7) + ylim(5, 80)
+  xlim(0.3, 0.7) + ylim(5, 70)
 
 plot1.1
 ```
@@ -5312,7 +5314,7 @@ plot2.1 <- all_sex_effs_sex_only %>%
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
-  theme(text = element_text(size=16)) + xlim(0.3, 0.7) + ylim(5, 80)
+  xlim(0.3, 0.7) + ylim(5, 25)
 
 plot2.1
 
@@ -5682,17 +5684,22 @@ plot3.1 <- all_sex_effs_sex_only %>%
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
-  theme(text = element_text(size=16)) + xlim(0.3, 0.7) + ylim(5, 80)
+  xlim(0.3, 0.7) + ylim(5, 2200)
 
 plot3.1
 
 ```
+
+## Combined plots
 
 (In all below examples the y axis (sample size) indicates the number of individuals per group and sex - hence the total sample size is 4 times the number indicated on the y axis.)
 
 Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for full range of effect sizes and on log-scale for sample size:
 
 ```{r}
+#| fig-height: 13
+
+
 comb1 <- ggarrange(plot1, plot2, plot3, ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom", labels = c("A", "B", "C"))
 
 comb1
@@ -5702,6 +5709,9 @@ comb1
 Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for moderate-sized effect sizes using identity scale for sample size:
 
 ```{r}
+#| fig-height: 13
+
+
 comb2 <- ggarrange(plot1.1, plot2.1, plot3.1, ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom", labels = c("A", "B", "C"))
 
 comb2

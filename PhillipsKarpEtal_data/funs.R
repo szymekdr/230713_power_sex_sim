@@ -149,7 +149,7 @@ p_value_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
       real_power <- 1
     }
     
-    cat("Power:", real_power, "Sample size:", no_per_gp, "\n")
+    # cat("Power:", real_power, "Sample size:", no_per_gp, "\n")
 
     if(no_per_gp > 10000) {
       break
