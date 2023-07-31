@@ -31,6 +31,7 @@ library(emmeans)
 library(tidyverse)
 library(here)
 library(ggpubr)
+library(ggridges)
 ```
 
 
@@ -5724,4 +5725,197 @@ Combined plots demonstrating the impact of heteroscedasticity on power for a no-
 comb3 <- ggarrange(plotA, plotB, ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", labels = c("A", "B"))
 
 comb3
+```
+
+
+# Source of heterogeneity
+
+Below plots show hypothetical scenarios when heterogeneity is a natural outcome of the underlying statistical process. Diagonal lines connect averages belonging to one treatment group (control vs. experimental). Thick vertical lines show SD of each subgroup.
+
+## Poisson distribution
+
+Simulation draws from $Pois(\lambda_i)$ assumes sex/treatment specific averages ($\lambda_i$) - see `lambda1...lambda4` below.
+
+```{r}
+N <- 500
+lambda1 <- 3
+lambda2 <- 9
+lambda3 <- 8
+lambda4 <- 15
+toy_poisson <- data.frame(
+    Treatment = c(rep("Ctrl", 2*N), rep("Exp", 2*N)),
+    Sex = c(rep("F", N), rep("M", N), rep("F", N), rep("M", N)),
+    Response = c(rpois(N, lambda1), rpois(N, lambda2), rpois(N, lambda3), rpois(N, lambda4))
+)
+toy_poisson$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
+```
+
+```{r}
+#| fig-height: 13
+plot1 <- ggplot(data = toy_poisson, aes(x = Response, y = Group)) +
+    geom_density_ridges(aes(fill = Sex, scale = 0.8),
+        stat = "binline", bins = 15, alpha = 0.6, draw_baseline = FALSE
+    ) +
+    theme_ridges() +
+    geom_point(size = 4, stat = "summary", fun = "mean") +
+    stat_summary(
+        fun = "mean", geom = "line", linewidth = 1,
+        aes(group = Treatment, linetype = Treatment)
+    ) +
+    stat_summary(
+        fun.max = function(x) mean(x) + sd(x),
+        fun.min = function(x) mean(x) - sd(x), geom = "errorbar",
+        linewidth = 1.5, width = 0
+    ) +
+    theme_bw() +
+    coord_flip() +
+    theme(text = element_text(size = 16))
+
+plot1
+```
+
+
+## Log-normal distribution
+
+Simulation samples from $Lognormal(\mu_i, \sigma^2=0.1)$ with sex/treatment specific means (`mu1...mu4`) below.
+
+
+```{r}
+N <- 500
+mu1 <- 0.01
+mu2 <- 0.5
+mu3 <- 0.4
+mu4 <- 0.8
+sd <- 0.31
+toy_lognorm <- data.frame(
+    Treatment = c(rep("Ctrl", 2*N), rep("Exp", 2*N)),
+    Sex = c(rep("F", N), rep("M", N), rep("F", N), rep("M", N)),
+    Response = c(rlnorm(N, mu1, sd), rlnorm(N, mu2, sd), rlnorm(N, mu3, sd), rlnorm(N, mu4, sd))
+)
+toy_lognorm$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
+```
+
+```{r}
+#| fig-height: 13
+plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
+    geom_density_ridges(aes(fill = Sex, scale = 0.8),
+        stat = "binline", bins = 15, alpha = 0.6, draw_baseline = FALSE
+    ) +
+    theme_ridges() +
+    geom_point(size = 4, stat = "summary", fun = "mean") +
+    stat_summary(
+        fun = "mean", geom = "line", linewidth = 1,
+        aes(group = Treatment, linetype = Treatment)
+    ) +
+    stat_summary(
+        fun.max = function(x) mean(x) + sd(x),
+        fun.min = function(x) mean(x) - sd(x), geom = "errorbar",
+        linewidth = 1.5, width = 0
+    ) +
+    theme_bw() +
+    coord_flip() +
+    theme(text = element_text(size = 16))
+plot2
+```
+
+## Combined plot
+
+```{r}
+#| fig-height: 13
+#| fig-label: fig:source_hetero1
+#| fig-cap: Simulated sex-by-treatment data using a Poisson (A) and log-normal (B) distribution. Diagonal lines connect averages belonging to one treatment group (control vs. experimental). Thick vertical lines show SD of each subgroup.
+
+ggarrange(plot1, plot2, ncol = 2, nrow = 1,
+common.legend = TRUE, legend = "bottom", labels = c("A", "B"))
+```
+
+## Non-linear response in sexes
+
+Heterogeneity in variances may also arise if the underlying phenotypic mapping function is non linear and has saturating/desaturating character in a range modified by sex dimorphism and/or experimental treatment.
+
+Here we assume a logistic function:
+
+$$f(x)=\frac{L}{e^{-k(x-x_0)}}$$
+
+with parameter values: `L = 3.5`, `k = 1`, `x0 = 1`.
+
+```{r}
+mapping_logistic <- function(x, L = 3.5, x0 = 1, k = 1) L/(1+exp(-1*k*(x - x0)))
+```
+
+Using this function, we can generate data assuming some treatment and sex differences:
+
+```{r}
+SD_N <- 0.5
+mu_env1 <- 1
+mu_env2 <- 2
+mu_env3 <- 3
+mu_env4 <- 4.5
+toy_nonlin <- data.frame(
+    Treatment = c(rep("Ctrl", 2 * N), rep("Exp", 2 * N)),
+    Sex = c(rep("F", N), rep("M", N), rep("F", N), rep("M", N)),
+    Env = c(
+        rnorm(N, mu_env1, SD_N), rnorm(N, mu_env2, SD_N),
+        rnorm(N, mu_env3, SD_N), rnorm(N, mu_env4, SD_N)
+    )
+)
+toy_nonlin$Response <- mapping_logistic(toy_nonlin$Env)
+```
+
+
+```{r}
+#| fig-height: 13
+#| fig-label: source_hetero2
+#| fig-cap: Heteroscedasticity between sexes (colours) and treatment groups (solid/dashed lines) resulting from a non-linear (here - logistic) mapping of some manipulated environemntal variable into the measured response. Thin dotted line - underlying mapping function. Points - realisations of mapping for simulated environmental data. Histograms relate to observed response measurements.
+
+
+ggplot() +
+    geom_point(
+        data = toy_nonlin,
+        aes(y = Env, x = Response, colour = Sex),
+        pch = 1, size = 3, alpha = 0.8
+    ) +
+    geom_line(
+        colour = "black", linetype = 2,
+        aes(y = seq(-1, 8, 0.1), x = mapping_logistic(seq(-1, 8, 0.1)))
+    ) +
+    geom_density_ridges(
+        data = toy_nonlin %>%
+            group_by(Sex, Treatment) %>%
+            mutate(meanEnv = mean(Env)),
+        aes(x = Response, group = meanEnv, y = meanEnv, fill = Sex),
+        stat = "binline", alpha = 0.8, draw_baseline = F
+    ) +
+    geom_point(
+        data = toy_nonlin %>%
+            group_by(Sex, Treatment) %>%
+            summarise(meanEnv = mean(Env), meanResp = mean(Response)),
+        aes(x = meanResp, y = meanEnv),
+        size = 4
+    ) +
+    geom_line(
+        data = toy_nonlin %>%
+            group_by(Sex, Treatment) %>%
+            summarise(meanEnv = mean(Env), meanResp = mean(Response)),
+        aes(x = meanResp, y = meanEnv, linetype = Treatment),
+        linewidth = 1
+    ) +
+    geom_errorbarh(
+        data = toy_nonlin %>%
+            group_by(Sex, Treatment) %>%
+            summarise(meanEnv = mean(Env), meanResp = mean(Response),
+            minResp = mean(Response) - sd(Response),
+            maxResp = mean(Response) + sd(Response)),
+        aes(y = meanEnv, xmin = minResp, xmax = maxResp),
+        linewidth = 1.5, height = 0
+    ) +
+    # stat_summary(data = toy_nonlin %>%
+    #         group_by(Sex, Treatment) %>%
+    #         mutate(meanEnv = mean(Env)),
+    #     fun = "mean", geom = "line", linewidth = 1,
+    #     aes(x = Response, group = meanEnv, y = meanEnv, linetype = Treatment)
+    # ) +
+    coord_flip() + ylab("Manipulated environmental variable") +
+    theme_ridges() +
+    theme_bw() + theme(text = element_text(size = 16))
 ```
