@@ -5751,7 +5751,7 @@ toy_poisson$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
 ```
 
 ```{r}
-#| fig-height: 13
+
 plot1 <- ggplot(data = toy_poisson, aes(x = Response, y = Group)) +
     geom_density_ridges(aes(fill = Sex, scale = 0.8),
         stat = "binline", bins = 15, alpha = 0.6, draw_baseline = FALSE
@@ -5796,7 +5796,7 @@ toy_lognorm$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
 ```
 
 ```{r}
-#| fig-height: 13
+
 plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
     geom_density_ridges(aes(fill = Sex, scale = 0.8),
         stat = "binline", bins = 15, alpha = 0.6, draw_baseline = FALSE
@@ -5821,7 +5821,7 @@ plot2
 ## Combined plot
 
 ```{r}
-#| fig-height: 13
+
 #| fig-label: fig:source_hetero1
 #| fig-cap: Simulated sex-by-treatment data using a Poisson (A) and log-normal (B) distribution. Diagonal lines connect averages belonging to one treatment group (control vs. experimental). Thick vertical lines show SD of each subgroup.
 
@@ -5864,7 +5864,7 @@ toy_nonlin$Response <- mapping_logistic(toy_nonlin$Env)
 
 
 ```{r}
-#| fig-height: 13
+
 #| fig-label: source_hetero2
 #| fig-cap: Heteroscedasticity between sexes (colours) and treatment groups (solid/dashed lines) resulting from a non-linear (here - logistic) mapping of some manipulated environemntal variable into the measured response. Thin dotted line - underlying mapping function. Points - realisations of mapping for simulated environmental data. Histograms relate to observed response measurements.
 
