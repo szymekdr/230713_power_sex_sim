@@ -6034,7 +6034,7 @@ figure2 <- ((plot1.1 | plot2.1 | plot3.1) +
     ((plotA | plotB) +
     plot_layout(guides = "collect") & theme(legend.position = "bottom")) +
     plot_annotation(tag_levels = "A")
-# plot_annotation(tag_levels = "A")
-# ggsave(plot = figure1, "Figure1_v0.png", width = 8, height = 14, units = "cm", dpi = "retina", scale = 2)
-# ggsave(plot = figure1, "Figure1_v0.pdf", width = 8, height = 14, units = "cm", scale = 2)
+
+ggsave(plot = figure1, "Figure1_v1.pdf", width = 12, height = 10, units = "cm", scale = 2)
+ggsave(plot = figure2, "Figure2_v1.pdf", width = 12, height = 10, units = "cm", scale = 2)
 ```
