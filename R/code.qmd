@@ -12,6 +12,8 @@ format:
     code-fold: show
     code-tools: true
     number-sections: true
+    message: false
+    warning: false
 crossref: 
   fig-title: Figure     # (default is "Figure")
   tbl-title: Table     # (default is "Table")
@@ -22,9 +24,13 @@ editor_options:
   chunk_output_type: console
 evaluate:
   cache: true
+  
 ---
 
 ```{r}
+#| output: false
+
+
 library(ggplot2)
 library(pander)
 library(emmeans)
@@ -32,6 +38,10 @@ library(tidyverse)
 library(here)
 library(ggpubr)
 library(ggridges)
+library(readxl)
+library(magrittr)
+library(patchwork)
+library(here)
 ```
 
 
@@ -379,6 +389,7 @@ Plots combining all scenarios from Fig. 1
 ```{r}
 #| code-fold: true
 
+
 all_sex_effs_sex_only <- rbind(calc_power_sex_none, calc_power_sex_small,
                                calc_power_sex_large)
 all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
@@ -415,7 +426,7 @@ all_sex_effs_sex_only %>%
 ```
 
 
-## Heteroscedastic sex variances
+## Heteroscedastic sex variances {#sec-powerbreakdown}
 
 We assume several scenarios with $\alpha$ equal to 0 (the above scenarios), 1 and 2, which relates to 100% or 200% increase in male variance, in relation to female variance (or ~44% and ~73% increase in male SD). The direction of sex bias is arbitrary.
 
@@ -1057,7 +1068,6 @@ It should be of note that evolutionary biology has seen heteroscedasticities exc
 ```{r}
 #| code-fold: true
 
-
 all_sex_effs_sex_only <- rbind(calc_power_sex_small,
                                calc_power_sex_large,
                                calc_power_sex_small_lowh,
@@ -1430,6 +1440,7 @@ Plots combining all scenarios from Fig. 1
 
 ```{r}
 #| code-fold: true
+
 
 all_sex_effs_sex_only <- rbind(calc_power_sex_ix_none, calc_power_sex_ix_small,
                                calc_power_sex_ix_large)
@@ -2116,6 +2127,7 @@ Power consequences of heteroscedasticities with varying (magnitude-only) interac
 #| code-fold: true
 
 
+
 all_sex_effs_sex_only <- rbind(calc_power_sex_ix_small,
                                calc_power_sex_ix_large,
                                calc_power_sex_ix_small_lowh,
@@ -2488,6 +2500,7 @@ Plots combining all scenarios from Fig. 1
 
 ```{r}
 #| code-fold: true
+
 
 all_sex_effs_sex_only <- rbind(calc_power_sex_ix_none, calc_power_sex_ix_small,
                                calc_power_sex_ix_large)
@@ -3174,6 +3187,7 @@ Power consequences of heteroscedasticities with varying (direction-only) interac
 #| code-fold: true
 
 
+
 all_sex_effs_sex_only <- rbind(calc_power_sex_ix_small,
                                calc_power_sex_ix_large,
                                calc_power_sex_ix_small_lowh,
@@ -3813,11 +3827,13 @@ calc_power_sex_large_largeh_50 %>%
 ```
 :::
 
+
+
 ## Large sex effect, crossed reaction norms (interaction)
 
 Identical sample size scenarios.
 
-First - low heteroscedasticity:
+First - **low heteroscedasticity**
 
 ::: {.panel-tabset}
 ## 5M+5F
@@ -4109,7 +4125,7 @@ calc_power_sex_ix_large_lowh_50 %>%
 :::
 
 
-Large heteroscedasticity:
+**Large heteroscedasticity**
 
 ::: {.panel-tabset}
 ## 5M+5F
@@ -4400,13 +4416,13 @@ calc_power_sex_ix_large_largeh_50 %>%
 :::
 
 
-## Summaries for sample size scenarios
+
+## Summaries of sample size scenarios
 
 No interaction, low (left) and large (right) heteroscedasticity:
 
 ```{r}
 #| code-fold: true
-
 
 all_sex_effs_sex_only <- rbind(
     calc_power_sex_large_lowh_5,
@@ -4494,7 +4510,6 @@ Interaction of effect direction present, low (left) and high (right) heterosceda
 
 ```{r}
 #| code-fold: true
-
 
 all_sex_effs_sex_only <- rbind(
     calc_power_sex_ix_large_lowh_5,
@@ -4589,6 +4604,7 @@ Scenario 1: strong sex effect, none to large heteroscedasticity. Assumed power 8
 ```{r}
 #| code-fold: true
 
+
 alpha <- 0
 
 no_per_gp <- 5
@@ -4677,10 +4693,9 @@ calc_power_sex_large_noh <- all_effs_sex_large_noh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("none"))
 
-```
 
-```{r}
-#| code-fold: true
+
+
 
 alpha <- 1
 
@@ -4770,11 +4785,9 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("low"))
 
-```
 
 
-```{r}
-#| code-fold: true
+
 
 alpha <- 2
 
@@ -4864,10 +4877,8 @@ calc_power_sex_large_largeh <- all_effs_sex_large_largeh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("large"))
 
-```
 
-```{r}
-#| code-fold: true
+
 
 
 all_sex_effs_sex_only <- rbind(
@@ -4930,7 +4941,7 @@ plot1 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) + coord_trans(y = "log10") +
   theme(text = element_text(size=16))
 
-plot1
+# plot1
 
 
 plot1.1 <- all_sex_effs_sex_only %>%
@@ -4948,11 +4959,11 @@ plot1.1 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 70)
 
-plot1.1
+# plot1.1
 ```
 
 
-
+Scenario 2: same but interaction of magnitude with more variable sex responding more strongly to the treatment.
 
 ```{r}
 #| code-fold: true
@@ -5045,12 +5056,8 @@ calc_power_sex_large_noh <- all_effs_sex_large_noh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("none"))
 
-```
 
 
-
-```{r}
-#| code-fold: true
 
 alpha <- 1
 
@@ -5140,11 +5147,9 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("low"))
 
-```
 
 
-```{r}
-#| code-fold: true
+
 
 alpha <- 2
 
@@ -5234,10 +5239,8 @@ calc_power_sex_large_largeh <- all_effs_sex_large_largeh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("large"))
 
-```
 
-```{r}
-#| code-fold: true
+
 
 
 all_sex_effs_sex_only <- rbind(
@@ -5300,7 +5303,7 @@ plot2 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Effect", values = cbb_palette) + coord_trans(y = "log10") +
   theme(text = element_text(size=16))
 
-plot2
+# plot2
 
 plot2.1 <- all_sex_effs_sex_only %>%
 #   filter(heterosc %in% c("low")) %>%
@@ -5317,15 +5320,17 @@ plot2.1 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 25)
 
-plot2.1
+# plot2.1
 
 ```
 
 
+Scenario 3: same as no. 1 but with interaction of magnitude present, with the less variable group responding more strongly to the treatment.
 
 
 ```{r}
 #| code-fold: true
+
 
 alpha <- 0
 
@@ -5415,12 +5420,8 @@ calc_power_sex_large_noh <- all_effs_sex_large_noh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("none"))
 
-```
 
 
-
-```{r}
-#| code-fold: true
 
 alpha <- 1
 
@@ -5510,11 +5511,9 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("low"))
 
-```
 
 
-```{r}
-#| code-fold: true
+
 
 alpha <- 2
 
@@ -5604,10 +5603,7 @@ calc_power_sex_large_largeh <- all_effs_sex_large_largeh %>%
   mutate(ix_eff_size = rep("none")) %>%
     mutate(heterosc = rep("large"))
 
-```
 
-```{r}
-#| code-fold: true
 
 
 all_sex_effs_sex_only <- rbind(
@@ -5670,7 +5666,7 @@ plot3 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Effect", values = cbb_palette) + coord_trans(y = "log10") +
   theme(text = element_text(size=16))
 
-plot3
+# plot3
 
 plot3.1 <- all_sex_effs_sex_only %>%
 #   filter(heterosc %in% c("low")) %>%
@@ -5687,7 +5683,7 @@ plot3.1 <- all_sex_effs_sex_only %>%
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 2200)
 
-plot3.1
+# plot3.1
 
 ```
 
@@ -5719,7 +5715,7 @@ comb2
 ```
 
 
-Combined plots demonstrating the impact of heteroscedasticity on power for a no-interaction case (A) and interaction-of-magnitude case (B; stronger effect in the more variable sex):
+Combined plots demonstrating the impact of heteroscedasticity on power (repeated from section @sec-powerbreakdown) for a no-interaction case (A) and interaction-of-magnitude case (B; stronger effect in the more variable sex):
 
 ```{r}
 comb3 <- ggarrange(plotA, plotB, ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", labels = c("A", "B"))
@@ -5748,9 +5744,8 @@ toy_poisson <- data.frame(
     Response = c(rpois(N, lambda1), rpois(N, lambda2), rpois(N, lambda3), rpois(N, lambda4))
 )
 toy_poisson$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
-```
 
-```{r}
+
 
 plot1 <- ggplot(data = toy_poisson, aes(x = Response, y = Group)) +
     geom_density_ridges(aes(fill = Sex, scale = 0.8),
@@ -5771,7 +5766,7 @@ plot1 <- ggplot(data = toy_poisson, aes(x = Response, y = Group)) +
     coord_flip() +
     theme(text = element_text(size = 16))
 
-plot1
+# plot1
 ```
 
 
@@ -5793,9 +5788,8 @@ toy_lognorm <- data.frame(
     Response = c(rlnorm(N, mu1, sd), rlnorm(N, mu2, sd), rlnorm(N, mu3, sd), rlnorm(N, mu4, sd))
 )
 toy_lognorm$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
-```
 
-```{r}
+
 
 plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
     geom_density_ridges(aes(fill = Sex, scale = 0.8),
@@ -5815,19 +5809,19 @@ plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
     theme_bw() +
     coord_flip() +
     theme(text = element_text(size = 16))
-plot2
+# plot2
 ```
 
 ## Combined plot
 
 ```{r}
-
 #| fig-label: fig:source_hetero1
 #| fig-cap: Simulated sex-by-treatment data using a Poisson (A) and log-normal (B) distribution. Diagonal lines connect averages belonging to one treatment group (control vs. experimental). Thick vertical lines show SD of each subgroup.
 
 ggarrange(plot1, plot2, ncol = 2, nrow = 1,
 common.legend = TRUE, legend = "bottom", labels = c("A", "B"))
 ```
+
 
 ## Non-linear response in sexes
 
@@ -5864,7 +5858,6 @@ toy_nonlin$Response <- mapping_logistic(toy_nonlin$Env)
 
 
 ```{r}
-
 #| fig-label: source_hetero2
 #| fig-cap: Heteroscedasticity between sexes (colours) and treatment groups (solid/dashed lines) resulting from a non-linear (here - logistic) mapping of some manipulated environemntal variable into the measured response. Thin dotted line - underlying mapping function. Points - realisations of mapping for simulated environmental data. Histograms relate to observed response measurements.
 
@@ -5918,4 +5911,102 @@ ggplot() +
     coord_flip() + ylab("Manipulated environmental variable") +
     theme_ridges() +
     theme_bw() + theme(text = element_text(size = 16))
+```
+
+
+
+# Taylor law in comparative data
+
+Here we use previously published synthetic data to demonstrate the degree and ubiquity of mean-variance relationships typical to the Taylor's law.
+
+First let's load the relevant data.
+
+```{r}
+data_all <- read_excel(here("R", "ALL_TRAITS_20200514.xlsx"), sheet = "main")
+# names(data_all)
+
+## analyses on adiposity [g] data only:
+data_all %>%
+    filter(Trait == "Adiposity") %>%
+    count(Paper_ID)
+
+# offspring ages
+summary(data_all$Age_at_Measurement_Days[data_all$Trait == "Adiposity"])
+
+# species
+summary(factor(data_all$Rodent_Type[data_all$Trait == "Adiposity"]))
+
+# merge control and treatment data (all traits)
+dataA <- tibble(
+    mean = c(data_all$Mean_Treatment, data_all$Mean_Control),
+    sd = c(data_all$SD_Treatment, data_all$SD_Control),
+    size = c(data_all$Sample_Size_n_Treatment, data_all$Sample_Size_n_Control),
+    sex = c(data_all$Offspring_Sex, data_all$Offspring_Sex),
+    trait = c(data_all$Trait, data_all$Trait),
+    species = c(data_all$Rodent_Type, data_all$Rodent_Type)
+)
+```
+
+Plotting individual subplots for mice, rats, and both species jointly.
+
+```{r}
+#| code-fold: true
+#| fig-height: 10
+#| message: false
+#| warning: false
+
+dataA %>%
+    filter(trait == "Adiposity" & species == "Mouse") %$%
+    cor.test(log(mean), log(sd)) -> cor_mice # calculate correlation
+figA <- dataA %>%
+    filter(trait == "Adiposity") %>%
+    filter(species == "Mouse") %>%
+    ggplot(aes(x = log(mean), y = log(sd), col = sex)) +
+    geom_point(aes(size = size), alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE) +
+    # coord_trans(x = "log10", y = "log10") +
+    theme_bw() +
+    theme(legend.position = "none") +
+    labs(title = "A.  Mouse adiposity", x = "ln (mean)", y = "ln (SD)") +
+    geom_text(x = -5.2, y = 1.5, aes(label = sprintf("italic(r) == %.2f", cor_mice$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
+
+dataA %>%
+    filter(trait == "Adiposity" & species == "Rat") %$%
+    cor.test(log(mean), log(sd)) -> cor_rats # calculate correlation
+figB <- dataA %>%
+    filter(trait == "Adiposity") %>%
+    filter(species == "Rat") %>%
+    ggplot(aes(x = log(mean), y = log(sd), col = sex)) +
+    geom_point(aes(size = size), alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE) +
+    # coord_trans(x = "log10", y = "log10") +
+    theme_bw() +
+    theme(legend.position = "none") +
+    labs(title = "B.  Rat adiposity", x = "ln (mean)", y = "ln (SD)") +
+    geom_text(x = -1, y = 4, aes(label = sprintf("italic(r) == %.2f", cor_rats$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
+
+# correlation - all
+dataA %>%
+    filter(trait == "Adiposity") %$%
+    cor.test(log(mean), log(sd)) -> cor_all
+figC <- dataA %>%
+    filter(trait == "Adiposity") %>%
+    ggplot(aes(x = log(mean), y = log(sd), col = sex)) +
+    geom_point(aes(size = size), alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE) +
+    # coord_trans(x = "log10", y = "log10") +
+    theme_bw() +
+    theme(legend.position = "bottom") +
+    labs(title = "C.  Mouse and rat adiposity", x = "ln (mean)", y = "ln (SD)") +
+    geom_text(x = -5, y = 4, aes(label = sprintf("italic(r) == %.2f", cor_all$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
+
+
+# assemble the panels using patchwork package
+figure1 <- figA / figB / figC +
+    plot_layout(ncol = 1, nrow = 3, heights = c(1, 1, 1.1)) #+
+# plot_annotation(tag_levels = "A")
+# ggsave(plot = figure1, "Figure1_v0.png", width = 8, height = 14, units = "cm", dpi = "retina", scale = 2)
+# ggsave(plot = figure1, "Figure1_v0.pdf", width = 8, height = 14, units = "cm", scale = 2)
+
+figure1
 ```
