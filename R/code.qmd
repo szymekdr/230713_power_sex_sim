@@ -169,9 +169,9 @@ calc_power_sex_none <- all_effs_sex_none %>%
 
 calc_power_sex_none %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -271,9 +271,9 @@ calc_power_sex_small <- all_effs_sex_small %>%
 
 calc_power_sex_small %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -376,9 +376,9 @@ calc_power_sex_large <- all_effs_sex_large %>%
 
 calc_power_sex_large %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -402,9 +402,9 @@ all_sex_effs_sex_only %>%
                          "ANOVA" = "Factorial")) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = sex_eff_size,
              group = interaction(sex_eff_size, method))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = method)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Sex effect size", values = cbb_palette) +
@@ -416,9 +416,9 @@ all_sex_effs_sex_only %>%
                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect,
              group = interaction(sex_eff_size, Effect))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = sex_eff_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -532,9 +532,9 @@ calc_power_sex_none_lowh <- all_effs_sex_none_lowh %>%
 
 calc_power_sex_none_lowh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -634,9 +634,9 @@ calc_power_sex_small_lowh <- all_effs_sex_small_lowh %>%
 
 calc_power_sex_small_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -738,9 +738,9 @@ calc_power_sex_large_lowh <- all_effs_sex_large_lowh %>%
 
 calc_power_sex_large_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -849,9 +849,9 @@ calc_power_sex_none_largeh <- all_effs_sex_none_largeh %>%
 
 calc_power_sex_none_largeh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -951,9 +951,9 @@ calc_power_sex_small_largeh <- all_effs_sex_small_largeh %>%
 
 calc_power_sex_small_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1055,9 +1055,9 @@ calc_power_sex_large_largeh <- all_effs_sex_large_largeh %>%
 
 calc_power_sex_large_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1083,12 +1083,12 @@ all_sex_effs_sex_only %>%
   mutate(method = recode(method,
                          "ANOVA" = "Factorial")) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = sex_eff_size,
              group = interaction(sex_eff_size, heterosc))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Sex effect size", values = cbb_palette) +
@@ -1099,11 +1099,11 @@ plotA <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -1219,9 +1219,9 @@ calc_power_sex_ix_none <- all_effs_sex_ix_none %>%
 
 calc_power_sex_ix_none %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -1322,9 +1322,9 @@ calc_power_sex_ix_small <- all_effs_sex_ix_small %>%
 
 calc_power_sex_ix_small %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1428,9 +1428,9 @@ calc_power_sex_ix_large <- all_effs_sex_ix_large %>%
 
 calc_power_sex_ix_large %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1454,9 +1454,9 @@ all_sex_effs_sex_only %>%
                          "ANOVA" = "Factorial")) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = ix_eff_size,
              group = interaction(ix_eff_size, method))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = method)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Ix effect size", values = cbb_palette) +
@@ -1468,9 +1468,9 @@ all_sex_effs_sex_only %>%
                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect,
              group = interaction(ix_eff_size, Effect))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = ix_eff_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -1585,9 +1585,9 @@ calc_power_sex_ix_none_lowh <- all_effs_sex_ix_none_lowh %>%
 
 calc_power_sex_ix_none_lowh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -1688,9 +1688,9 @@ calc_power_sex_ix_small_lowh <- all_effs_sex_ix_small_lowh %>%
 
 calc_power_sex_ix_small_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1793,9 +1793,9 @@ calc_power_sex_ix_large_lowh <- all_effs_sex_ix_large_lowh %>%
 
 calc_power_sex_ix_large_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -1905,9 +1905,9 @@ calc_power_sex_ix_none_largeh <- all_effs_sex_ix_none_largeh %>%
 
 calc_power_sex_ix_none_largeh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -2008,9 +2008,9 @@ calc_power_sex_ix_small_largeh <- all_effs_sex_ix_small_largeh %>%
 
 calc_power_sex_ix_small_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2113,9 +2113,9 @@ calc_power_sex_ix_large_largeh <- all_effs_sex_ix_large_largeh %>%
 
 calc_power_sex_ix_large_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2143,12 +2143,12 @@ all_sex_effs_sex_only %>%
   mutate(method = recode(method,
                          "ANOVA" = "Factorial")) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = ix_eff_size,
              group = interaction(ix_eff_size, heterosc))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Ix effect size", values = cbb_palette) +
@@ -2159,11 +2159,11 @@ plotB <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -2279,9 +2279,9 @@ calc_power_sex_ix_none <- all_effs_sex_ix_none %>%
 
 calc_power_sex_ix_none %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -2382,9 +2382,9 @@ calc_power_sex_ix_small <- all_effs_sex_ix_small %>%
 
 calc_power_sex_ix_small %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2488,9 +2488,9 @@ calc_power_sex_ix_large <- all_effs_sex_ix_large %>%
 
 calc_power_sex_ix_large %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2514,9 +2514,9 @@ all_sex_effs_sex_only %>%
                          "ANOVA" = "Factorial")) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = ix_eff_size,
              group = interaction(ix_eff_size, method))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = method)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Ix effect size", values = cbb_palette) +
@@ -2528,9 +2528,9 @@ all_sex_effs_sex_only %>%
                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect,
              group = interaction(ix_eff_size, Effect))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = ix_eff_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -2645,9 +2645,9 @@ calc_power_sex_ix_none_lowh <- all_effs_sex_ix_none_lowh %>%
 
 calc_power_sex_ix_none_lowh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -2748,9 +2748,9 @@ calc_power_sex_ix_small_lowh <- all_effs_sex_ix_small_lowh %>%
 
 calc_power_sex_ix_small_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2853,9 +2853,9 @@ calc_power_sex_ix_large_lowh <- all_effs_sex_ix_large_lowh %>%
 
 calc_power_sex_ix_large_lowh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -2965,9 +2965,9 @@ calc_power_sex_ix_none_largeh <- all_effs_sex_ix_none_largeh %>%
 
 calc_power_sex_ix_none_largeh %>%
     ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-    geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+    geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
     geom_line(aes(group = Effect)) +
-    theme_classic() +
+    theme_bw() +
     ylab("Power") + ylim(0, 1)
 ```
 
@@ -3068,9 +3068,9 @@ calc_power_sex_ix_small_largeh <- all_effs_sex_ix_small_largeh %>%
 
 calc_power_sex_ix_small_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -3173,9 +3173,9 @@ calc_power_sex_ix_large_largeh <- all_effs_sex_ix_large_largeh %>%
 
 calc_power_sex_ix_large_largeh %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -3203,12 +3203,12 @@ all_sex_effs_sex_only %>%
   mutate(method = recode(method,
                          "ANOVA" = "Factorial")) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = ix_eff_size,
              group = interaction(ix_eff_size, heterosc))) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() +  theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Ix effect size", values = cbb_palette) +
@@ -3219,11 +3219,11 @@ all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   mutate(heterosc = factor(heterosc,
-                               levels = c("none", "low", "large"))) %>%
+                               levels = c("large", "low", "none"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = heterosc)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -3339,9 +3339,9 @@ calc_power_sex_large_lowh_5 <- all_effs_sex_large_lowh_5 %>%
 
 calc_power_sex_large_lowh_5 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 
 ```
@@ -3433,9 +3433,9 @@ calc_power_sex_large_lowh_10 <- all_effs_sex_large_lowh_10 %>%
 
 calc_power_sex_large_lowh_10 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -3526,9 +3526,9 @@ calc_power_sex_large_lowh_50 <- all_effs_sex_large_lowh_50 %>%
 
 calc_power_sex_large_lowh_50 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 :::
@@ -3634,9 +3634,9 @@ calc_power_sex_large_largeh_5 <- all_effs_sex_large_largeh_5 %>%
 
 calc_power_sex_large_largeh_5 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -3727,9 +3727,9 @@ calc_power_sex_large_largeh_10 <- all_effs_sex_large_largeh_10 %>%
 
 calc_power_sex_large_largeh_10 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -3820,9 +3820,9 @@ calc_power_sex_large_largeh_50 <- all_effs_sex_large_largeh_50 %>%
 
 calc_power_sex_large_largeh_50 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 :::
@@ -3934,9 +3934,9 @@ calc_power_sex_ix_large_lowh_5 <- all_effs_sex_ix_large_lowh_5 %>%
 
 calc_power_sex_ix_large_lowh_5 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -4025,9 +4025,9 @@ calc_power_sex_ix_large_lowh_10 <- all_effs_sex_ix_large_lowh_10 %>%
 
 calc_power_sex_ix_large_lowh_10 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -4117,9 +4117,9 @@ calc_power_sex_ix_large_lowh_50 <- all_effs_sex_ix_large_lowh_50 %>%
 
 calc_power_sex_ix_large_lowh_50 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 :::
@@ -4226,9 +4226,9 @@ calc_power_sex_ix_large_largeh_5 <- all_effs_sex_ix_large_largeh_5 %>%
 
 calc_power_sex_ix_large_largeh_5 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -4317,9 +4317,9 @@ calc_power_sex_ix_large_largeh_10 <- all_effs_sex_ix_large_largeh_10 %>%
 
 calc_power_sex_ix_large_largeh_10 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 
@@ -4408,9 +4408,9 @@ calc_power_sex_ix_large_largeh_50 <- all_effs_sex_ix_large_largeh_50 %>%
 
 calc_power_sex_ix_large_largeh_50 %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(group = Effect)) +
-  theme_classic() +
+  theme_bw() +
   ylab("Power") + ylim(0, 1)
 ```
 :::
@@ -4443,9 +4443,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4461,9 +4461,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4479,9 +4479,9 @@ plot1 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = sample_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -4495,9 +4495,9 @@ plot2 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = sample_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -4530,9 +4530,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4548,9 +4548,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4566,9 +4566,9 @@ plot1 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = sample_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -4582,9 +4582,9 @@ plot2 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = p_value, colour = Effect)) +
-  geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line(aes(linetype = sample_size)) +
-  theme_classic() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Statistical power") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) +
@@ -4897,9 +4897,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4915,9 +4915,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -4933,13 +4933,13 @@ plot1 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
   theme_bw() +
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) + coord_trans(y = "log10") +
-  theme(text = element_text(size=16))
+  theme(text = element_text(size=15))
 
 # plot1
 
@@ -4950,13 +4950,14 @@ plot1.1 <- all_sex_effs_sex_only %>%
 #                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
-  ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  ggplot(aes(x = treat_es2, y = ssize, linetype = heterosc)) +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
-  theme_bw() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Sample size") +
   xlab("Main treatment effect") +
-  scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
+  labs(linetype = "Heteroscedasticity") +
+  # scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 70)
 
 # plot1.1
@@ -5259,9 +5260,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -5277,9 +5278,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -5295,13 +5296,13 @@ plot2 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
   theme_bw() +
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) + coord_trans(y = "log10") +
-  theme(text = element_text(size=16))
+  theme(text = element_text(size=15))
 
 # plot2
 
@@ -5311,13 +5312,14 @@ plot2.1 <- all_sex_effs_sex_only %>%
 #                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
-  ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  ggplot(aes(x = treat_es2, y = ssize, linetype = heterosc)) +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
-  theme_bw() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Sample size") +
   xlab("Main treatment effect") +
-  scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
+  labs(linetype = "Heteroscedasticity") +
+  # scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 25)
 
 # plot2.1
@@ -5622,9 +5624,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -5640,9 +5642,9 @@ all_sex_effs_sex_only <- as.data.frame(lapply(all_sex_effs_sex_only, unlist))
 #   mutate(method = recode(method,
 #                          "ANOVA" = "Factorial")) %>%
 #   ggplot(aes(x = treat_es2, y = p_value, colour = sample_size)) +
-#   geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+#   geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
 #   geom_line() +
-#   theme_classic() +
+#   theme_bw() +
 #   ylab("Statistical power") +
 #   xlab("Main treatment effect") +
 #   scale_colour_manual(name = "Sample size", values = cbb_palette) +
@@ -5658,13 +5660,13 @@ plot3 <- all_sex_effs_sex_only %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
   ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
   theme_bw() +
   ylab("Sample size") +
   xlab("Main treatment effect") +
   scale_colour_manual(name = "Effect", values = cbb_palette) + coord_trans(y = "log10") +
-  theme(text = element_text(size=16))
+  theme(text = element_text(size=15))
 
 # plot3
 
@@ -5674,13 +5676,14 @@ plot3.1 <- all_sex_effs_sex_only %>%
 #                                levels = c("5M+5F", "10M+10F", "50M+50F"))) %>%
 #   mutate(sex_eff_size = factor(sex_eff_size,
 #                                levels = c("none", "small", "large"))) %>%
-  ggplot(aes(x = treat_es2, y = ssize, colour = heterosc)) +
-  # geom_hline(yintercept = 0.8, linetype = "dashed", colour = "gray") +
+  ggplot(aes(x = treat_es2, y = ssize, linetype = heterosc)) +
+  # geom_hline(yintercept = 0.8, linetype = 1, colour = "red") +
   geom_line() +
-  theme_bw() +
+  theme_bw() + theme(text = element_text(size = 15)) +
   ylab("Sample size") +
   xlab("Main treatment effect") +
-  scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
+  labs(linetype = "Heteroscedasticity") +
+  # scale_colour_manual(name = "Heteroscedasticity", values = cbb_palette) +
   xlim(0.3, 0.7) + ylim(5, 2200)
 
 # plot3.1
@@ -5703,7 +5706,7 @@ comb1
 ```
 
 
-Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for moderate-sized effect sizes using identity scale for sample size:
+Combined plot for scenarios of no interaction (A), interaction with stronger effect in more variable sex (B) and stronger effect in less variable sex (C) for moderate-sized effect sizes using identity scale for sample size. Capping of some relationships (high sample sizes hitting a ceiling in (C) or low sample sizes hitting a floor in (B) results from simulation limitations - sample sizes were modelled from a minimum of 5 (per sex per group) and were capped at the first value exceeding 2000 individuals, as any such sample would anyway be already impractical).
 
 ```{r}
 #| fig-height: 13
@@ -5764,7 +5767,7 @@ plot1 <- ggplot(data = toy_poisson, aes(x = Response, y = Group)) +
     ) +
     theme_bw() +
     coord_flip() +
-    theme(text = element_text(size = 16))
+    theme(text = element_text(size = 15))
 
 # plot1
 ```
@@ -5791,7 +5794,7 @@ toy_lognorm$Group <- interaction(toy_poisson$Sex, toy_poisson$Treatment)
 
 
 
-plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
+plot2 <- figure1C <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
     geom_density_ridges(aes(fill = Sex, scale = 0.8),
         stat = "binline", bins = 15, alpha = 0.6, draw_baseline = FALSE
     ) +
@@ -5808,7 +5811,7 @@ plot2 <- ggplot(data = toy_lognorm, aes(x = Response, y = Group)) +
     ) +
     theme_bw() +
     coord_flip() +
-    theme(text = element_text(size = 16))
+    theme(text = element_text(size = 15))
 # plot2
 ```
 
@@ -5861,8 +5864,7 @@ toy_nonlin$Response <- mapping_logistic(toy_nonlin$Env)
 #| fig-label: source_hetero2
 #| fig-cap: Heteroscedasticity between sexes (colours) and treatment groups (solid/dashed lines) resulting from a non-linear (here - logistic) mapping of some manipulated environemntal variable into the measured response. Thin dotted line - underlying mapping function. Points - realisations of mapping for simulated environmental data. Histograms relate to observed response measurements.
 
-
-ggplot() +
+figure1D <- ggplot() +
     geom_point(
         data = toy_nonlin,
         aes(y = Env, x = Response, colour = Sex),
@@ -5877,7 +5879,7 @@ ggplot() +
             group_by(Sex, Treatment) %>%
             mutate(meanEnv = mean(Env)),
         aes(x = Response, group = meanEnv, y = meanEnv, fill = Sex),
-        stat = "binline", alpha = 0.8, draw_baseline = F
+        stat = "binline", alpha = 0.6, draw_baseline = F
     ) +
     geom_point(
         data = toy_nonlin %>%
@@ -5901,7 +5903,7 @@ ggplot() +
             maxResp = mean(Response) + sd(Response)),
         aes(y = meanEnv, xmin = minResp, xmax = maxResp),
         linewidth = 1.5, height = 0
-    ) +
+    ) + guides(colour = "none") +
     # stat_summary(data = toy_nonlin %>%
     #         group_by(Sex, Treatment) %>%
     #         mutate(meanEnv = mean(Env)),
@@ -5909,8 +5911,10 @@ ggplot() +
     #     aes(x = Response, group = meanEnv, y = meanEnv, linetype = Treatment)
     # ) +
     coord_flip() + ylab("Manipulated environmental variable") +
-    theme_ridges() +
-    theme_bw() + theme(text = element_text(size = 16))
+    # theme_ridges() +
+    theme_bw() + theme(text = element_text(size = 15))
+
+figure1D
 ```
 
 
@@ -5965,9 +5969,10 @@ figA <- dataA %>%
     geom_point(aes(size = size), alpha = 0.5) +
     geom_smooth(method = "lm", se = FALSE) +
     # coord_trans(x = "log10", y = "log10") +
-    theme_bw() +
-    theme(legend.position = "none") +
-    labs(title = "A.  Mouse adiposity", x = "ln (mean)", y = "ln (SD)") +
+    theme_bw() + guides(size = "none") +
+    labs(title = "Mouse adiposity", x = "ln (mean)", y = "ln (SD)",
+    colour = "Sex") +
+    theme(text = element_text(size = 15), legend.position = "none") +
     geom_text(x = -5.2, y = 1.5, aes(label = sprintf("italic(r) == %.2f", cor_mice$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
 
 dataA %>%
@@ -5980,9 +5985,10 @@ figB <- dataA %>%
     geom_point(aes(size = size), alpha = 0.5) +
     geom_smooth(method = "lm", se = FALSE) +
     # coord_trans(x = "log10", y = "log10") +
-    theme_bw() +
-    theme(legend.position = "none") +
-    labs(title = "B.  Rat adiposity", x = "ln (mean)", y = "ln (SD)") +
+    theme_bw() + guides(size = "none") +
+    labs(title = "Rat adiposity", x = "ln (mean)", y = "ln (SD)",
+    colour = "Sex") +
+    theme(text = element_text(size = 15), legend.position = "none") +
     geom_text(x = -1, y = 4, aes(label = sprintf("italic(r) == %.2f", cor_rats$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
 
 # correlation - all
@@ -5995,18 +6001,40 @@ figC <- dataA %>%
     geom_point(aes(size = size), alpha = 0.5) +
     geom_smooth(method = "lm", se = FALSE) +
     # coord_trans(x = "log10", y = "log10") +
-    theme_bw() +
-    theme(legend.position = "bottom") +
-    labs(title = "C.  Mouse and rat adiposity", x = "ln (mean)", y = "ln (SD)") +
+    theme_bw() + guides(size = "none") +
+    labs(title = "Mouse and rat adiposity", x = "ln (mean)", y = "ln (SD)") +
+    theme(text = element_text(size = 15), legend.position = "bottom") +
     geom_text(x = -5, y = 4, aes(label = sprintf("italic(r) == %.2f", cor_all$estimate)), parse = TRUE, hjust = 0, col = "black", size = 5)
 
 
 # assemble the panels using patchwork package
 figure1 <- figA / figB / figC +
-    plot_layout(ncol = 1, nrow = 3, heights = c(1, 1, 1.1)) #+
+    plot_layout(ncol = 1, nrow = 3,
+    heights = c(1, 1, 1.1))
+figure1
+
+figure1AB <- figA / figB +
+    plot_layout(ncol = 2, nrow = 1, guides = "collect") +
+    plot_annotation(tag_levels = "A") & theme(legend.position = "right")
+```
+
+
+```{r}
+#| echo: false
+#| eval: false
+
+# chunk to save the figure - not printed to html
+
+figure1 <- figure1AB /
+    ((figure1C | figure1D) + plot_layout(guides = "collect")) +
+    plot_annotation(tag_levels = "A")
+
+figure2 <- ((plot1.1 | plot2.1 | plot3.1) +
+    plot_layout(guides = "collect") & theme(legend.position = "bottom")) /
+    ((plotA | plotB) +
+    plot_layout(guides = "collect") & theme(legend.position = "bottom")) +
+    plot_annotation(tag_levels = "A")
 # plot_annotation(tag_levels = "A")
 # ggsave(plot = figure1, "Figure1_v0.png", width = 8, height = 14, units = "cm", dpi = "retina", scale = 2)
 # ggsave(plot = figure1, "Figure1_v0.pdf", width = 8, height = 14, units = "cm", scale = 2)
-
-figure1
 ```
