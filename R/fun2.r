@@ -1,16 +1,3 @@
-# parameters of importance
-# alpha <- 0
-# symm <- F
-
-# no_per_gp <- 5
-# variable_mean <- 1
-# variable_sd <- 0.5
-# treat_es2 <- 0
-# sex_es2 <- 1
-# ix_es2 <- 0
-# sex_sd <- 1 + alpha
-
-
 mock_df_generator2 <- function(no_per_gp, variable_mean, variable_sd,
                                treat_es2, sex_es2, ix_es2,
                                sex_sd, symm = FALSE) {
@@ -171,4 +158,4 @@ p_values_for_power <- function(
     }
 
     return(out_power)
-}x
+}
