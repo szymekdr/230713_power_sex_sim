@@ -51,7 +51,7 @@ library(tidyverse)
 mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
                               treat_es, sex_es, male_es, female_es,
                               treat_es2, sex_es2, ix_es2,
-                              sex_sd = 0) {
+                              sex_sd = 0, symm = F) {
   X <- cbind(
     rep(1, no_per_gp * 4), # intercept
     c(rep(0, no_per_gp * 2), rep(1, no_per_gp * 2)), # treatment
@@ -59,8 +59,23 @@ mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
     c(rep(0, no_per_gp), rep(0, no_per_gp), rep(0, no_per_gp), rep(1, no_per_gp)) # interaction
   )
 
+  X_sex <- X[, 3]
+  if (symm) {
+    X_sex <- ifelse(X_sex == 0, -1, 1)
+  }
+
+
   beta <- c(variable_mean, treat_es2, sex_es2, ix_es2)
-  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * sqrt(rep(1, 4 * no_per_gp) + X[, 3] * (sex_sd - 1)))
+
+  if (symm) {
+    lowv <- variable_sd * sqrt(rep(1, 4 * no_per_gp) + -1 * (sex_sd - 1))
+    highv <- variable_sd * sqrt(rep(1, 4 * no_per_gp) + 1 * (sex_sd - 1))
+  } else {
+    lowv <- variable_sd * sqrt(rep(1, 4 * no_per_gp) + 0 * (sex_sd - 1))
+    highv <- variable_sd * sqrt(rep(1, 4 * no_per_gp) + 1 * (sex_sd - 1))
+  }
+
+  y <- X %*% beta + rnorm(no_per_gp * 4, 0, variable_sd * sqrt(rep(1, 4 * no_per_gp) + X_sex * (sex_sd - 1)))
 
   Treatment <- c(
     rep.int("Control", times = no_per_gp * 2),
@@ -73,8 +88,8 @@ mock_df_generator <- function(no_per_gp, variable_mean, variable_sd,
     rep.int("Male", times = no_per_gp)
   )
 
-  sim_df <- data.frame(col1 = y, col2 = Sex, col3 = Treatment)
-  names(sim_df) <- c("dep_variable", "Sex", "Treatment")
+  sim_df <- data.frame(col1 = y, col2 = Sex, col3 = Treatment, col4 = lowv, col5 = highv)
+  names(sim_df) <- c("dep_variable", "Sex", "Treatment", "lowv", "highv")
   return(sim_df)
 }
 
@@ -97,7 +112,8 @@ p_value_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
                                         treat_es2, sex_es2, ix_es2,
                                         sex_sd = 1,
                                         fix_power = F,
-                                        assume_power = 0.8,
+                                        assume_power = 0.8, symm = F,
+                                        lm_method = "lm",
                                         tweak_param = "no_per_gp", tweak_effect = "Treatment") {
   
 
@@ -110,36 +126,84 @@ p_value_interaction_crossed <- function(n_rep, no_per_gp, variable_mean,
         no_per_gp, variable_mean, variable_sd,
         treat_es, sex_es, male_es, female_es,
         treat_es2, sex_es2, ix_es2,
-        sex_sd
+        sex_sd, symm
       )
 
-      model <- aov(dep_variable ~ Treatment * Sex, sim_data)
+      if (lm_method == "lm") {
+        
+        model <- aov(dep_variable ~ Treatment * Sex, sim_data)
+        out_table <- as.data.frame(anova(model))
+        names(out_table)[5] <- "p_value"
+        out_table$Effect <- row.names(out_table)
+        row.names(out_table) <- NULL
 
-      return(summary(model))
+        # print(out_table)
+
+        return(list(out_table, c(sim_data[1, "lowv"], sim_data[1, "highv"])))
+      } else if (lm_method == "gls") {
+        
+        model <- gls(
+          dep_variable ~ Treatment * Sex,
+          weights = varIdent(form = ~ 1 | Sex),
+          sim_data
+        )
+        out_table <- as.data.frame(anova(model))
+        names(out_table)[3] <- "p_value"
+        out_table$Effect <- row.names(out_table)
+        row.names(out_table) <- NULL
+        return(list(out_table, c(sim_data[1, "lowv"], sim_data[1, "highv"])))
+      } else if (lm_method == "sandwich") {
+
+      } else {
+        stop("Check possible methods or provide one")
+      }
+
+      # return(list(summary(model), c(sim_data[1, "lowv"], sim_data[1, "highv"])))
     }
 
-    sim_p_val <- as.data.frame(replicate(n_rep, p_values()))
+    if (lm_method == "lm") {
+      method_sim <- "ANOVA"
+    } else if (lm_method == "gls") {
+      method_sim <- "GLS"
+    }
+    
+    simulation_raw <- replicate(n_rep, p_values(), simplify = F)
+    # cat("simulation done \n")
+
+    # print(simulation_raw)
+
+    sim_p_val <- bind_rows(sapply(simulation_raw,
+      FUN = function(x) x[[1]],
+      simplify = F
+    ))
+    
+    # print(head(sim_p_val))
+    # cat("concat done \n")
+    
 
     full_results <- sim_p_val %>%
-      select(starts_with("Pr..")) %>%
-      as_tibble(rownames = "Effect") %>%
-      pivot_longer(-Effect, values_to = "p_value") %>%
+      select(p_value, Effect) %>%
       mutate(male_es = rep(male_es)) %>%
       mutate(treat_es = rep(treat_es)) %>%
       mutate(sex_es = rep(sex_es)) %>%
-      mutate(method = rep("ANOVA")) %>%
+      mutate(method = rep(method_sim)) %>%
       mutate(heterosc = sex_sd) %>%
       mutate(treat_es2 = treat_es2) %>%
       mutate(sex_es2 = sex_es2) %>%
-      mutate(ix_es2 = ix_es2) %>%
-      mutate(Effect = dplyr::recode(Effect,
-        "Treatment    " = "Treatment",
-        "Sex          " = "Sex"
-      )) %>%
-      select(-name)
+      mutate(ix_es2 = ix_es2)
+
+    # print(head(full_results))
+
+    sim_variances <- sapply(simulation_raw,
+      FUN = function(x) x[[2]],
+      simplify = F
+    )[[1]]
+
+    full_results$lowvar <- sim_variances[1]
+    full_results$highvar <- sim_variances[2]
 
     temp_results <- full_results %>%
-      filter(!Effect == "Residuals    ") %>%
+      filter(!Effect == "Residuals") %>%
       filter(Effect == tweak_effect)
 
     if (fix_power) {
@@ -246,3 +310,8 @@ anova_wrapper <- function(data, model_expression_as_string,
       tidy()) %>%
     return()
 }
+
+
+
+
+# A <- replicate(5, list(summary(aov(c(1, 2, 3, 4, 5) ~ c(1, 1, 1, 0, 0))), c(1, 2)))
