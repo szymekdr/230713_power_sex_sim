@@ -171,4 +171,4 @@ p_values_for_power <- function(
     }
 
     return(out_power)
-}
+}x
