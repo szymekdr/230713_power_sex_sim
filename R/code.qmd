@@ -6836,6 +6836,7 @@ source(here("R/fun2.r"))
 
 alpha <- 0
 symm <- F
+tolerance <- 0.05
 
 no_per_gp <- 5
 variable_mean <- 1
@@ -6860,7 +6861,7 @@ A <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6870,7 +6871,7 @@ B <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6880,7 +6881,7 @@ C <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6905,7 +6906,7 @@ D <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6915,7 +6916,7 @@ E <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6925,7 +6926,7 @@ G <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6949,7 +6950,7 @@ H <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6959,7 +6960,7 @@ J <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6969,7 +6970,7 @@ K <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1
+        fixed_power = TRUE, gsize_incr_rate = tolerance
     ), .progress = TRUE) %>%
     bind_rows()
 
@@ -6989,7 +6990,7 @@ K <- seq(0.3, 0.7, 0.1) %>%
 Below - the GLS approach and three interaction scenarios: no interaction (@fig-gls1), interaction of magnitude with more variable sex having stronger effect (@fig-gls2) and interaction of magnitude with less variable sex showing stronger effect (@fig-gls3).
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using GLS; no interaction present.
+#| fig-cap: Sample size vs. effect strength using GLS; no interaction present. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-gls1
 #| code-fold: true
 
@@ -7003,7 +7004,7 @@ BB <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7014,7 +7015,7 @@ CC <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7035,7 +7036,7 @@ bind_rows(A, BB, CC) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using GLS; interaction with more variable sex with stronger effect.
+#| fig-cap: Sample size vs. effect strength using GLS; interaction with more variable sex with stronger effect. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-gls2
 #| code-fold: true
 
@@ -7048,7 +7049,7 @@ EE <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7059,7 +7060,7 @@ GG <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7080,7 +7081,7 @@ bind_rows(D, EE, GG) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using GLS; less variable sex with stronger effect.
+#| fig-cap: Sample size vs. effect strength using GLS; less variable sex with stronger effect. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-gls3
 #| code-fold: true
 
@@ -7094,7 +7095,7 @@ JJ <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7105,7 +7106,7 @@ KK <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "gls"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7130,7 +7131,7 @@ bind_rows(H, JJ, KK) %>%
 Below sample size estimates replicate original scenarios but use sandwich estimator to derive SEs and p-values for the main treatment effect. Three scenarios (@fig-sand1, @fig-sand2, @fig-sand3) relate to the same interaction scenarios as in the GLS case.
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using sandwich estimator; no interaction.
+#| fig-cap: Sample size vs. effect strength using sandwich estimator; no interaction. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sand1
 #| code-fold: true
 
@@ -7144,7 +7145,7 @@ BBB <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7155,7 +7156,7 @@ CCC <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7176,7 +7177,7 @@ bind_rows(A, BBB, CCC) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using sandwich estimator; interaction in the direction of heteroscedasticity.
+#| fig-cap: Sample size vs. effect strength using sandwich estimator; interaction in the direction of heteroscedasticity. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sand2
 #| code-fold: true
 
@@ -7190,7 +7191,7 @@ EEE <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7201,7 +7202,7 @@ GGG <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7222,7 +7223,7 @@ bind_rows(D, EEE, GGG) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength using sandwich estimator; interaction opposite to the direction of heteroscedasticity.
+#| fig-cap: Sample size vs. effect strength using sandwich estimator; interaction opposite to the direction of heteroscedasticity. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sand3
 #| code-fold: true
 
@@ -7235,7 +7236,7 @@ JJJ <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 1.5, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7246,7 +7247,7 @@ KKK <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = 2, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "sandwich"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7272,7 +7273,7 @@ bind_rows(H, JJJ, KKK) %>%
 Below cases are analogous to original simulations with added heterogeneity, but now average heterogeneity of males and females is kept approximately constant and equal to the homoscedastic case (SD = 0.5).
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; no interaction.
+#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; no interaction. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sym1
 #| code-fold: true
 
@@ -7293,7 +7294,7 @@ Bs <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7315,7 +7316,7 @@ Cs <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7336,7 +7337,7 @@ bind_rows(A, Bs, Cs) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; interaction in the direction of heteroscedasticity.
+#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; interaction in the direction of heteroscedasticity. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sym2
 #| code-fold: true
 
@@ -7358,7 +7359,7 @@ Es <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7380,7 +7381,7 @@ Gs <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7401,7 +7402,7 @@ bind_rows(D, Es, Gs) %>%
 ```
 
 ```{r}
-#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; interaction opposite to the direction of heteroscedasticity.
+#| fig-cap: Sample size vs. effect strength with symmetrical heteroscedasticity; interaction opposite to the direction of heteroscedasticity. Partial or complete overlap of two heteroscedasticity scenarios may make two lines look line one.
 #| label: fig-sym3
 #| code-fold: true
 
@@ -7423,7 +7424,7 @@ Js <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
@@ -7445,7 +7446,7 @@ Ks <- seq(0.3, 0.7, 0.1) %>%
         variable_mean = variable_mean, variable_sd = variable_sd,
         treat_es2 = x, sex_es2 = sex_es2, ix_es2 = ix_es2,
         sex_sd = sex_sd, symm = symm, tweak_effect = "Treatment",
-        fixed_power = TRUE, gsize_incr_rate = 0.1,
+        fixed_power = TRUE, gsize_incr_rate = tolerance,
         lm_method = "aov"
     ), .progress = TRUE) %>%
     bind_rows()
